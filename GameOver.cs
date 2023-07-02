@@ -67,15 +67,12 @@ public class GameOver : MonoBehaviour
         {
             toggleSound = false;
             Source.UnPause();
-            
         }
-
         if (soundActive == false && toggleSound)
         {
             toggleSound = false;
             Source.Pause();
         }
-
         
         //get the amount of seconds remainng for the power up
         slowRemaining.GetComponent<TextMeshProUGUI>().text = (10 - ts.Seconds).ToString();
