@@ -23,6 +23,7 @@ public class SlowTime : MonoBehaviour
     
     public GameObject warningCountdown;
     public static bool active = false;
+    public static bool inArea = false;
     void Start()
     {
         //set intial spawnRate
@@ -36,7 +37,7 @@ public class SlowTime : MonoBehaviour
         //start the spawn timer
         timer = new Stopwatch();
         timer.Start();
-        offset = Random.Range(10, 20);
+        offset = Random.Range(20, 35);
         
         //dont show the slowdonw countdown upon starting
         warningCountdown.gameObject.SetActive(false);
@@ -67,12 +68,14 @@ public class SlowTime : MonoBehaviour
     void spawnPowerUp()
     {
         
+        
         float powerUpPos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
         
         //Create a new acorn to spawn
         GameObject powerUpClone = Instantiate<GameObject>(powerUp, new Vector3(powerUpPos, 5.5f, 0), Quaternion.identity);
         Rigidbody2D rb = powerUpClone.GetComponent<Rigidbody2D>();
-        
+
+        inArea = true;
         //add bounce
         rb.AddTorque(-0.3f, ForceMode2D.Force);
         

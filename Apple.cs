@@ -145,7 +145,7 @@ public class Apple : MonoBehaviour
             Destroy(prefab, secondsToDestroy);
 
 
-            int rnd = Random.Range(0, 16);
+            int rnd = Random.Range(0, 25);
 
             if (rnd == 5 && starActive == false)
             {

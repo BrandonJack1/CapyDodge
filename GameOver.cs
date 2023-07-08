@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
+using Unity.Mathematics;
+using Unity.VisualScripting;
+//using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -22,6 +25,19 @@ public class GameOver : MonoBehaviour
     
     public AudioSource Source;
     public  AudioClip acornCollect;
+    public Canvas canvas;
+
+    public AudioClip acornCollect1;
+    public AudioClip acornCollect2;
+    public AudioClip acornCollect3;
+    public AudioClip acornCollect4;
+    public AudioClip acornCollect5;
+    public AudioClip acornCollect6;
+    public AudioClip acornCollect7;
+    public AudioClip acornCollect8;
+    public AudioClip acornCollect9;
+    
+    
     public AudioClip goldenAcornCollect;
     public AudioClip acronHit;
     public AudioClip starSound;
@@ -41,8 +57,17 @@ public class GameOver : MonoBehaviour
     
     public GameObject continueBtn;
 
+    public GameObject comboText;
+
+    public GameObject previousComboText;
+
+    public GameObject empty;
+    private Animator animator;
+
     void Start()
     {
+
+        animator = GetComponent<Animator>();
         continueUsed = false;
         pauseButton.SetActive(true);
         activeScene = SceneManager.GetActiveScene().buildIndex;
@@ -144,18 +169,56 @@ public class GameOver : MonoBehaviour
             {   
                 //get rid of acorn
                 Destroy(col.gameObject);
-                
-                //increase score
-                Score.score += 50;
-                //spawn a floating number
 
                 if (activeScene == 2)
                 {
                     GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
-                    prefab.GetComponentInChildren<TextMesh>().text = "50";
+
+                    if (Combo.comboActive)
+                    {
+                        Combo.multiplier += 0.25f;
+                        Score.score += (int)(50 * Combo.multiplier);
+                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(50 * Combo.multiplier)).ToString();
+                        prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
+                        Combo.comboTimer = 0.8f;
+                        playComboSound();
+
+                        //delete the previous one to prevent overlap
+                        if (previousComboText != null)
+                        {
+                            Destroy(previousComboText);
+                        }
+
+                        GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
+                        comboUI.transform.SetParent(empty.transform, false);
+                        comboUI.GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+
+                        previousComboText = comboUI;
+                        float rndRotate = Random.Range(-10, 10);
+                        
+                        
+                        comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
+                        Destroy(comboUI, 0.8f);
+
+
+                        comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
+                        comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
+                        //instantiate combo UI
+                        //random rotation
+
+                    }
+                    else
+                    {
+                        Combo.comboActive = true;
+                        //increase score
+                        Score.score += 50;
+                        //spawn a floating number
+                        prefab.GetComponentInChildren<TextMesh>().text = "50";
+                        Source.PlayOneShot(acornCollect);
+                    }
                     Destroy(prefab, secondsToDestroy);
                 }
-                Source.PlayOneShot(acornCollect);
+                
             }
 
         }
@@ -178,6 +241,7 @@ public class GameOver : MonoBehaviour
         else if (col.CompareTag("Clock"))
         {
 
+            SlowTime.inArea = false;
             SlowTime.active = true;
             var acorns = GameObject.FindGameObjectsWithTag("Acorn");
             var goldenAcorns = GameObject.FindGameObjectsWithTag("GoldenAcorn");
@@ -205,7 +269,7 @@ public class GameOver : MonoBehaviour
                 obj.GetComponent<Rigidbody2D>().gravityScale =  0.01f;
             }
 
-            SlowTime.offset += 5;
+            SlowTime.offset += 15;
             timer.Start();
         }
         //if the tag of the object is GoldenAcorn
@@ -237,58 +301,59 @@ public class GameOver : MonoBehaviour
             {
                 //get rid of acorn
                 Destroy(col.gameObject);
-                
-                //increase score
-                Score.score += 100;
-                //spawn a floating number
 
                 if (activeScene == 2)
                 {
                     GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
-                    prefab.GetComponentInChildren<TextMesh>().text = "100";
+
+                    if (Combo.comboActive)
+                    {
+                        Combo.multiplier += 0.25f;
+                        Score.score += (int)(100 * Combo.multiplier);
+                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(100 * Combo.multiplier)).ToString();
+                        prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
+                        Combo.comboTimer = 0.8f;
+                        playComboSound();
+                        
+                        //delete the previous one to prevent overlap
+                        if (previousComboText != null)
+                        {
+                            Destroy(previousComboText);
+                        }
+
+                        GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
+                        comboUI.transform.SetParent(empty.transform, false);
+                        comboUI.GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+
+                        previousComboText = comboUI;
+                        float rndRotate = Random.Range(-10, 10);
+                        
+                        
+                        comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
+                        Destroy(comboUI, 0.8f);
+                        
+                        comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
+                        comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
+                        //instantiate combo UI
+                        //random rotation
+
+                    }
+                    else
+                    {
+                        Combo.comboActive = true;
+                        //increase score
+                        Score.score += 100;
+                        //spawn a floating number
+                        prefab.GetComponentInChildren<TextMesh>().text = "100";
+                        Source.PlayOneShot(acornCollect);
+                    }
                     Destroy(prefab, secondsToDestroy);
                 }
+                
                 Source.PlayOneShot(goldenAcornCollect);
                 
             }
         }
-
-
-        //ST PATRICKS
-        /*else if (col.CompareTag("Clover"))
-        {
-
-            int rnd = Random.Range(0, 4);
-            Destroy(col.gameObject);
-            GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
-
-            if (rnd == 0)
-            {
-                prefab.GetComponentInChildren<TextMesh>().text = "2 Coins";
-                Score.bonusCoins += 2;
-            }
-            else if (rnd == 1 || rnd == 2)
-            {
-                prefab.GetComponentInChildren<TextMesh>().text = "5 Coins";
-                Score.bonusCoins += 5;
-            }
-            else if (rnd == 3 || rnd == 4)
-            {
-                prefab.GetComponentInChildren<TextMesh>().text = "10 Coins";
-                Score.bonusCoins += 10;
-            }
-            
-            
-            //power up sound
-            Source.PlayOneShot(coins);
-            
-            Destroy(prefab, secondsToDestroy);
-
-            //Apple.cloverActive = false;
-
-        }*/
-        
-        
     }
     
     IEnumerator gameOverAnimation(bool offerContinue, GameObject col)
@@ -330,5 +395,94 @@ public class GameOver : MonoBehaviour
             SceneManager.LoadScene(3);
             
         }
+    }
+
+    public void playComboSound()
+    {
+        switch (Combo.multiplier)
+        {
+            case 1.25f:
+                Source.PlayOneShot(acornCollect1);
+                break;
+            case 1.5f:
+                Source.PlayOneShot(acornCollect2);
+                break;
+            case 1.75f:
+                Source.PlayOneShot(acornCollect3);
+                break;
+            case 2f:
+                Source.PlayOneShot(acornCollect4);
+                break;
+            case 2.25f:
+                Source.PlayOneShot(acornCollect5);
+                break;
+            case 2.5f:
+                Source.PlayOneShot(acornCollect6);
+                break;
+            case 2.75f:
+                Source.PlayOneShot(acornCollect7);
+                break;
+            case 3f:
+                Source.PlayOneShot(acornCollect8);
+                break;
+            case 3.25f:
+                Source.PlayOneShot(acornCollect9);
+                break;
+            default:
+                Source.PlayOneShot(acornCollect9);
+                break;
+        }
+    }
+    
+    public Color comboColor(float multiplier, bool largeText)
+    {
+
+        byte transparency;
+        if (largeText)
+        {
+            transparency = 230;
+        }
+        else
+        {
+            transparency = 255;
+        }
+
+        Color returnColor;
+        switch (multiplier)
+        {
+            case 1.25f:
+                returnColor = new Color32(255,60,60,transparency);
+                break;
+            case 1.5f:
+                returnColor = new Color32(0,209,18,transparency);
+                break;
+            case 1.75f:
+                returnColor = new Color32(82,38,255,transparency);
+                break;
+            case 2f:
+                returnColor = new Color32(38,140,255,transparency);
+                break;
+            case 2.25f:
+                returnColor = new Color32(255,60,60,transparency);
+                break;
+            case 2.5f:
+                returnColor = new Color32(0,209,18,transparency);
+                break;
+            case 2.75f:
+                returnColor = new Color32(82,38,255,transparency);
+                break;
+            case 3f:
+                returnColor = new Color32(38,140,255,transparency);
+                break;
+            case 3.25f:
+                returnColor = new Color32(255,60,60,transparency);
+                break;
+            default:
+                returnColor = new Color32(0,209,18,200);
+                break;
+        }
+
+        return returnColor;
+
     }
 }

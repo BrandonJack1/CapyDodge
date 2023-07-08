@@ -29,11 +29,8 @@ public class Continue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         int lang = PlayerPrefs.GetInt("Lang Pref", 0);
         PowerUp.active = false;
-        
-
 
         if (PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
         {
@@ -137,9 +134,15 @@ public class Continue : MonoBehaviour
 
             if (SlowTime.active)
             {
-                SlowTime.timer.Start();
                 GameOver.timer.Start();
             }
+
+            if (SlowTime.inArea == false)
+            {
+                SlowTime.timer.Start();
+            }
+            
+         
 
             //show pause button
             pauseButton.SetActive(true);
@@ -184,7 +187,6 @@ public class Continue : MonoBehaviour
 
         if (PlayerPrefs.GetInt("Coins") >= 100)
         {
-            
             Coins.subtractCoins(100);
             adContinue = true;
         }

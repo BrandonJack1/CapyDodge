@@ -46,6 +46,7 @@ public class Acorn : MonoBehaviour
     
     void Start()
     {
+        spawnRate = 4f;
         //spawn acorns in relation to the spawn rate
         InvokeRepeating("spawnAcorn", 1, spawnRate);
 
