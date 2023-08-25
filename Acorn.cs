@@ -107,15 +107,14 @@ public class Acorn : MonoBehaviour
             increaseSpeed(10, 1.2f);
         }
     }
-
-
+    
     public void increaseSpeed(int speed, float rate)
     {
         //run the "Speeding up text"
         speedText.SetActive(true);
         //play the sound 
         source.PlayOneShot(speedingUp);
-        StartCoroutine(disableText());
+        StartCoroutine(DisableText());
 
         switch (speed)
         {
@@ -185,46 +184,59 @@ public class Acorn : MonoBehaviour
             if (spawnDiffAcorn == 5 && goldenActive == false)
             {
                 goldenActive = true;
-                //spawn the golden acorn
-                acornClone =
-                    Object.Instantiate<GameObject>(goldenAcorn, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-                rb = acornClone.GetComponent<Rigidbody2D>();
-                acornClone.transform.localScale = new Vector3(PlayerSize.ACORN_WIDTH, PlayerSize.ACORN_HEIGHT, 0.73f);
+                InstantiateAcorns(pos, "Golden");
             }
             else if (spawnDiffAcorn is 10 or 20 && giantActive == false && !UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
             {
                 giantActive = true;
-                acornClone =
-                    Object.Instantiate<GameObject>(giantAcorn, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-                rb = acornClone.GetComponent<Rigidbody2D>();
-                acornClone.transform.localScale = new Vector3(PlayerSize.GIANT_ACORN_WIDTH, PlayerSize.GIANT_ACORN_HEIGHT, 0.73f);
+                InstantiateAcorns(pos, "Giant");
             }
             else
             {
-                //Spawn a normal acorn
-                acornClone =
-                    Object.Instantiate<GameObject>(acorn, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-                rb = acornClone.GetComponent<Rigidbody2D>();
-                acornClone.transform.localScale = new Vector3(PlayerSize.ACORN_WIDTH, PlayerSize.ACORN_HEIGHT, 0.73f);
+                InstantiateAcorns(pos, "Normal");
             }
-            
-            //add bounce to the acorn
-            rb.AddTorque(-0.3f, ForceMode2D.Force);
-
-            //create random forces for the acorns when spawning in 
-            float xForce = Random.Range(-30, 30);
-            xForce = xForce / 10;
-            float yForce = Random.Range(-30, 30);
-            yForce = yForce / 10;
-
-            //add the force
-            rb.AddForce(new Vector2(xForce, yForce), ForceMode2D.Impulse);
         }
+    }
+    
+    public void InstantiateAcorns(float pos, string type)
+    {
+        GameObject acornType;
+        GameObject acornClone;
+        Rigidbody2D rb;
+
+        switch (type)
+        {
+            case "Golden":
+                acornType = goldenAcorn;
+                break;
+            case "Giant":
+                acornType = giantAcorn;
+                break;
+            default:
+                acornType = acorn;
+                break;
+        }
+        acornClone =
+            Object.Instantiate<GameObject>(acornType, new Vector3(pos, 5.5f, 0), Quaternion.identity);
+        rb = acornClone.GetComponent<Rigidbody2D>();
         
-        //this is branch
+        //set the proper size for the acorn
+        acornClone.transform.localScale = type == "Giant" ? new Vector3(PlayerSize.GIANT_ACORN_WIDTH, PlayerSize.GIANT_ACORN_HEIGHT, 0.73f) : new Vector3(PlayerSize.ACORN_WIDTH, PlayerSize.ACORN_HEIGHT, 0.73f);
+        
+        //add bounce to the acorn
+        rb.AddTorque(-0.3f, ForceMode2D.Force);
+
+        //create random forces for the acorns when spawning in 
+        float xForce = Random.Range(-30, 30);
+        xForce = xForce / 10;
+        float yForce = Random.Range(-30, 30);
+        yForce = yForce / 10;
+
+        //add the force
+        rb.AddForce(new Vector2(xForce, yForce), ForceMode2D.Impulse);
     }
 
-    IEnumerator disableText()
+    IEnumerator DisableText()
     {
         //hide the speed text after 4 seconds
         yield return new WaitForSeconds(4f);
