@@ -14,8 +14,8 @@ public class Acorn : MonoBehaviour
     public static bool goldenActive = false;
     public static bool giantActive = false;
     public static float spawnRate = 4f;
-    public float leftOffset;
-    public float rightOffset;
+    private float leftOffset;
+    private float rightOffset;
     
     private bool speed1 = false;
     private bool speed2 = false;
@@ -28,12 +28,12 @@ public class Acorn : MonoBehaviour
     private bool speed9 = false; 
     private bool speed10 = false;
     
-    public AudioSource source;
-    public AudioClip leaves;
-    public AudioClip speedingUp;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip leaves;
+    [SerializeField] private AudioClip speedingUp;
     
     private ParticleSystem particles;
-    public Camera mainCamera;
+    [SerializeField] Camera mainCamera;
     public static bool slowActive;
     
     void Start()
