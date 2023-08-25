@@ -47,7 +47,7 @@ public class Acorn : MonoBehaviour
         spawnRate = 4f;
         
         //spawn acorns in relation to the spawn rate
-        InvokeRepeating("spawnAcorn", 1, spawnRate);
+        InvokeRepeating("SpawnAcorn", 1, spawnRate);
 
         goldenActive = false;
         giantActive = false;
@@ -65,7 +65,7 @@ public class Acorn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //adjust the spawn speed
+        //adjust the spawn speed when a score is reached
         if (Score.score >= 750 && speed1 == false)
         {
             increaseSpeed(1,3.5f);
@@ -107,16 +107,16 @@ public class Acorn : MonoBehaviour
             increaseSpeed(10, 1.2f);
         }
     }
-
-
+    
     public void increaseSpeed(int speed, float rate)
     {
         //run the "Speeding up text"
         speedText.SetActive(true);
         //play the sound 
         source.PlayOneShot(speedingUp);
-        StartCoroutine(disableText());
-
+        StartCoroutine(DisableText());
+        
+        //increase the speed
         switch (speed)
         {
             case 1:
@@ -155,15 +155,15 @@ public class Acorn : MonoBehaviour
         //stop the previous invoke for the previous spawn rate
         CancelInvoke();
         spawnRate = rate;
-        InvokeRepeating("spawnAcorn", 1, spawnRate);
+        InvokeRepeating("SpawnAcorn", 1, spawnRate);
     }
 
-    public void spawnAcorn()
+    public void SpawnAcorn()
     {
         //only spawn acorns when the slow time isnt active
         if (SlowTime.active == false)
         {
-            //get a random value to spawn the acorn
+            //get a random value to spawn the acorn which is within device dimensions and play area
             float pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x,
                 mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
 
@@ -174,7 +174,7 @@ public class Acorn : MonoBehaviour
             //disable the leave after an amount of time
             source.PlayOneShot(leaves);
             
-            //1 in 10 chance of the golden acorn spawning
+            //1 in 30 chance of spawning one of the different acorns (giant and golden)
             int spawnDiffAcorn = Random.Range(1, 30);
             
             //If chance happens, spawn the golden acorn, otherwise spawn regular acorn
@@ -222,7 +222,7 @@ public class Acorn : MonoBehaviour
         }
     }
 
-    IEnumerator disableText()
+    IEnumerator DisableText()
     {
         //hide the speed text after 4 seconds
         yield return new WaitForSeconds(4f);
