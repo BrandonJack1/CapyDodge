@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class SettingsPref : MonoBehaviour
 
     public TMP_Text controlsText;
     public TMP_Text soundText;
+    public TMP_Text musicText;
 
     public GameObject helpCanvas;
     public GameObject language;
@@ -18,6 +20,9 @@ public class SettingsPref : MonoBehaviour
 
     public GameObject controlsBtn;
     public GameObject controlsLbl;
+
+    public AudioMixer soundMixer;
+    
 
     public int lang;
     // Start is called before the first frame update
@@ -41,20 +46,20 @@ public class SettingsPref : MonoBehaviour
 
         if (Application.platform == RuntimePlatform.tvOS && SceneManager.GetActiveScene().buildIndex == 5)
         {
-            
+
             language.SetActive(false);
-           
+
         }
-        
+
         if (Application.platform == RuntimePlatform.tvOS)
         {
 
             controlsBtn.SetActive(false);
             controlsLbl.SetActive(false);
-            
-            
+
+
         }
-        
+
         if (PlayerPrefs.GetString("Controls", "Tilt") == "Touch")
         {
 
@@ -84,7 +89,7 @@ public class SettingsPref : MonoBehaviour
         }
         else if (PlayerPrefs.GetString("Controls", "Tilt") == "Tilt")
         {
-            
+
             switch (lang)
             {
                 //English
@@ -108,9 +113,9 @@ public class SettingsPref : MonoBehaviour
                     controlsText.text = "Inclinacao";
                     break;
             }
-            
+
         }
-        
+
         if (PlayerPrefs.GetString("Sound", "On") == "On")
         {
             switch (lang)
@@ -136,11 +141,10 @@ public class SettingsPref : MonoBehaviour
                     soundText.text = "Em";
                     break;
             }
-            AudioListener.volume = 1;
         }
         else if (PlayerPrefs.GetString("Sound", "On") == "Off")
         {
-            
+
             switch (lang)
             {
                 //English
@@ -164,9 +168,65 @@ public class SettingsPref : MonoBehaviour
                     soundText.text = "Desligado";
                     break;
             }
-            AudioListener.volume = 0;
         }
-        
+
+
+        if (PlayerPrefs.GetString("Music", "On") == "On")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    musicText.text = "On";
+                    break;
+                //French
+                case 1:
+                    musicText.text = "Sur";
+                    break;
+                //Spansih
+                case 2:
+                    musicText.text = "En";
+                    break;
+                //German
+                case 3:
+                    musicText.text = "Auf";
+                    break;
+                //Portagese
+                case 4:
+                    musicText.text = "Em";
+                    break;
+            }
+        }
+        else if (PlayerPrefs.GetString("Music", "On") == "Off")
+        {
+
+            switch (lang)
+            {
+                //English
+                case 0:
+                    musicText.text = "Off";
+                    break;
+                //French
+                case 1:
+                    musicText.text = "Arret";
+                    break;
+                //Spansih
+                case 2:
+                    musicText.text = "Fuera de";
+                    break;
+                //German
+                case 3:
+                    musicText.text = "Aus";
+                    break;
+                //Portagese
+                case 4:
+                    musicText.text = "Desligado";
+                    break;
+            }
+
+
+
+        }
     }
 
     public void switchControls()
@@ -200,6 +260,20 @@ public class SettingsPref : MonoBehaviour
             PlayerPrefs.SetString("Sound", "On");
         }
         
+    }
+
+    public void switchMusic()
+    {
+        
+        if (PlayerPrefs.GetString("Music", "On") == "On")
+        {
+            PlayerPrefs.SetString("Music", "Off");
+            
+        }
+        else if (PlayerPrefs.GetString("Music", "On") == "Off")
+        {
+            PlayerPrefs.SetString("Music", "On");
+        }
     }
 
     public void reset()

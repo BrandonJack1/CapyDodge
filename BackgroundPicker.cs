@@ -9,13 +9,10 @@ public class BackgroundPicker : MonoBehaviour
     public GameObject background;
 
     public Sprite bg1;
-
     public Sprite bg2;
     
-
     public static int activeBG;
-
-  
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -36,9 +33,6 @@ public class BackgroundPicker : MonoBehaviour
                 activeBG = 2;
 
             }
-
-            
-
         }
         else
         {
@@ -50,18 +44,8 @@ public class BackgroundPicker : MonoBehaviour
             {
                 background.GetComponent<SpriteRenderer>().sprite = bg2;
             }
-        
-            
         }
         ScaleToFitScreen.refresh = true;
         MainMenuPlayer.playSound = true;
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

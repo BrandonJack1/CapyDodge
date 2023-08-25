@@ -23,39 +23,38 @@ public class Combo : MonoBehaviour
     public static bool messageActive;
     public int lang;
     
-    
-    
-    //1. Check if combo is active and the timer is not under 0, if the timer goes under 0 set the combo to be unactive
-    //2. if its not active, dont do anything
-    //3. if the combo is active increase the points and reset the timer
-    
     void Start()
     {
+        //set the timer
         comboTimer = 0.8f;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //if the combo is active subtract time
         if (comboActive)
         {
             comboTimer -= Time.deltaTime;
         }
-
+        
+        //if the combo reaches 0 before the player collects another acorn
         if (comboTimer <= 0)
         {
             comboActive = false;
-            comboTimer = 0.8f;
-
+            //reset timer
+            comboTimer = 1f;
+            
+            //display a bonus message if the player has a high multiplier
             if (multiplier >= 2f)
-            {
-                
+            {   
+                //instantiate message
                 GameObject comboMessage = Instantiate(comboMessagePrefab, new Vector3(-12.48f, -1.07f,-0.1f), quaternion.identity );
                 comboMessage.transform.SetParent(empty.transform, false);
                 
                 messageActive = true;
-
+                
+                //choose a random message to show
                 int rnd = Random.Range(1, 5);
                 string message;
                 lang = PlayerPrefs.GetInt("Lang Pref", 0);
@@ -187,25 +186,23 @@ public class Combo : MonoBehaviour
                                 break;
                         }
                         break;
-                        
                 }
-
+                
+                //set the other layer of the text to the same message
                 comboMessage.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = message;
-                comboMessage.transform.GetChild(0).GetComponent<Animator>().SetTrigger("ComboTrigger");
+                comboMessage.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = message;
+                comboMessage.transform.GetComponent<Animator>().SetTrigger("ComboTrigger");
+                
+                //play the bonus audio
                 source.PlayOneShot(clip);
                 
                 StartCoroutine(comboMessageActive(1.7f));
-                Destroy(comboMessage, 1.6f);
+                Destroy(comboMessage, 1.4f);
             }
-            
             multiplier = 1f;
-            //multiplier += 0.25f;
-
         }
     }
     
-    
-
     IEnumerator comboMessageActive(float secs)
     {
         yield return new WaitForSeconds(secs);

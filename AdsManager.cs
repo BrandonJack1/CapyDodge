@@ -20,15 +20,14 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
 
     public GameObject rewardedError;
     public GameObject continueBtn;
-
-
+    
     public int switchScene;
-
-
+    
     public GameObject noThanks;
     void Start()
     {
-
+        
+        //set the game id based on the device
         if (Application.platform == RuntimePlatform.IPhonePlayer)
         {
             gameID = appleID;
@@ -38,13 +37,16 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
             gameID = androidID;
         }
         
-        #if UNITY_EDITOR
-
+#if UNITY_EDITOR
+        
+        //set game id to apple id when its the editor to prevent errors
         gameID = appleID;
         
-        #endif
+#endif
         intializeAds();
         LoadBannerAd();
+        
+        //load ads
         if (Application.platform == RuntimePlatform.IPhonePlayer)
         {
             Advertisement.Load("Rewarded_iOS");
@@ -73,14 +75,12 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
             Advertisement.Banner.Hide();
         }
     }
-
-
+    
     public void loadInterstialAd()
     {
         //show the add every 2 retries if they have not removed ads
         if (turnCount >= 1 && PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
         {
-
             switchScene = 2;
             turnCount = 0;
             
@@ -93,11 +93,11 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
                 Advertisement.Show("Interstitial_Android",this);
             }
             
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             
             Advertisement.Show("Interstitial_iOS",this);
             
-            #endif
+#endif
         }
         else
         {
@@ -111,7 +111,6 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         //show the add every 2 retries if they have not removed ads
         if (turnCount >= 1 && PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
         {
-
             switchScene = 1;
             turnCount = 0;
             
@@ -139,9 +138,6 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
 
     public void loadRewardedVideo()
     {
-        //when loading the video, make sure the player cant cancel
-        
-        
         if (Application.platform == RuntimePlatform.IPhonePlayer && PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
         {
             Advertisement.Show("Rewarded_iOS", this);
@@ -156,8 +152,6 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Advertisement.Show("Rewarded_iOS",this);
             
     #endif
-        
-
     }
     public void LoadBannerAd()
     {

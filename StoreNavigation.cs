@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Localization.Settings;
 
-public class storeNavigation : MonoBehaviour
+public class StoreNavigation : MonoBehaviour
 {
 
     public GameObject inventory;

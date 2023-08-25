@@ -46,8 +46,6 @@ public class Language : MonoBehaviour
     {
         pannel.SetActive(false);
         PlayerPrefs.SetString("Lang Set", "Yes");
-        
-        
     }
 
     public void openPannel()

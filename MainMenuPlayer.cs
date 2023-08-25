@@ -116,12 +116,12 @@ public class MainMenuPlayer : MonoBehaviour
         
         if (PlayerPrefs.GetString("Sound", "On") == "On")
         {
-            AudioListener.volume = 1;
+            //AudioListener.volume = 1;
 
         }
         else if (PlayerPrefs.GetString("Sound", "On") == "Off")
         {
-            AudioListener.volume = 0;
+            //AudioListener.volume = 0;
         }
         //if copper mode is enabled
         if (PlayerPrefs.GetString("Copper", "No") == "Yes")
@@ -146,35 +146,32 @@ public class MainMenuPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        
         if (playSound)
         {
-
             playSound = false;
             if (BackgroundPicker.activeBG == 1)
             {
                 source.loop = true;
                 source.clip = day;
-                source.Play();
-                source.volume = 1f;
+                //source.Play();
+                //source.volume = 1f;
             }
             else if (BackgroundPicker.activeBG == 2)
             {
                 source.loop = true;
                 source.clip = night;
-                source.Play();
-                source.volume = 0.5f;
+                //source.Play();
+                //source.volume = 0.5f;
             }
         }
 
         if (moveRight)
         {
-            currentCapy.transform.Translate(Vector3.right *4f * Time.deltaTime);
+            currentCapy.transform.Translate(Vector3.right * 4f * Time.deltaTime);
         }
         else
         {
-            currentCapy.transform.Translate(Vector3.left *4f * Time.deltaTime);
+            currentCapy.transform.Translate(Vector3.left * 4f * Time.deltaTime);
         }
 
         xPos = currentCapy.transform.position.x;
@@ -182,14 +179,14 @@ public class MainMenuPlayer : MonoBehaviour
         if (xPos > 13.5)
         {
             moveRight = false;
-            currentCapy.transform.localScale = new Vector3(-0.6f, 0.7f, 1);
+            currentCapy.transform.localScale = new Vector3(-0.8f, 0.8f, 1);
             currentCapy.transform.GetChild(objectEnaabled).gameObject.SetActive(false);
             randomObject();
         }
         else if (xPos < -13.5)
         {
             moveRight = true;
-            currentCapy.transform.localScale = new Vector3(0.6f, 0.7f, 1);
+            currentCapy.transform.localScale = new Vector3(0.8f, 0.8f, 1);
             currentCapy.transform.GetChild(objectEnaabled).gameObject.SetActive(false);
             randomObject();
             

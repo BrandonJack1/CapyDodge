@@ -6,56 +6,38 @@ public class PlayerSize : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public static float playerHeight;
-    public static float playerWidth;
+    public static float PLAYER_HEIGHT;
+    public static float PLAYER_WIDTH;
 
-    public static float acornHeight;
-    public static float acornWidth;
+    public static float ACORN_HEIGHT;
+    public static float ACORN_WIDTH;
+
+    public static float GIANT_ACORN_HEIGHT;
+    public static float GIANT_ACORN_WIDTH;
+
     void Start()
     {
-        
         //set the default dimensions
-        //playerWidth = 0.2481744f;
-        //playerHeight = 0.2857763f;
-        
-        //acornWidth = 0.681005657f;
-        //acornHeight = 0.65039885f;
-        
-        //set the default dimensions
-        playerWidth = 0.2481744f;
-        playerHeight = 0.2857763f;
-            
-        acornWidth = 0.681005657f;
-        acornHeight = 0.65039885f;
+        PLAYER_WIDTH = 0.28f;
+        PLAYER_HEIGHT = 0.28f;
 
-        
+        ACORN_WIDTH = 0.68f;
+        ACORN_HEIGHT = 0.65f;
 
-        
+        GIANT_ACORN_WIDTH = 1.02f;
+        GIANT_ACORN_HEIGHT = 0.975f;
+
 #if UNITY_IOS
-        
+
         if (UnityEngine.iOS.Device.generation.ToString().Contains("ipad"))
         {
-            
-            playerWidth = 0.20385161f;
-            playerHeight = 0.270000011f;
+            PLAYER_WIDTH = 0.20f;
+            PLAYER_HEIGHT = 0.25f;
 
-            acornWidth = 0.498602033f;
-            acornHeight = 0.47619307f;
-            
+            ACORN_WIDTH = 0.5f;
+            ACORN_HEIGHT = 0.47f;
+
         }
-      
-        
 #endif
-        
-        
-
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -13,7 +13,6 @@ public class InventoryManager : MonoBehaviour
     public static InventoryManager Instance;
 
     public List<Item> masterList = new List<Item>();
-   // public List<Item> inventory = new List<Item>();
 
     public List<Item> skinSets = new List<Item>();
     public List<Item> skins = new List<Item>();
@@ -21,21 +20,16 @@ public class InventoryManager : MonoBehaviour
     public List<Item> storeItems = new List<Item>();
     
     public Transform storeItemContent;
-   // public Transform inventoryItemContent;
 
     public Transform skinSetContent;
     public Transform skinContent;
     public Transform accessoryContent;
     public GameObject InventoryItem;
-
-    //public  InventoryItemController[] inventoryItemControllers;
-
+    
     public InventoryItemController[] SkinSetItemController;
     public InventoryItemController[] SkinItemController;
     public InventoryItemController[] AccessoryItemController;
     public InventoryItemController[] storeItemsControllers;
-
-
     
     public static bool relist = false;
 
@@ -46,7 +40,6 @@ public class InventoryManager : MonoBehaviour
         Instance = this;
     }
     
-
     public void Start()
     {
         lang = PlayerPrefs.GetInt("Lang Pref");
@@ -55,13 +48,9 @@ public class InventoryManager : MonoBehaviour
 
     }
     
-
     public void ListItems()
     {
-
         relist = false;
-        
-        //reset the grid
         
         //reset each of the grid
         foreach (Transform item in storeItemContent)
@@ -110,10 +99,8 @@ public class InventoryManager : MonoBehaviour
 
     public void listStoreItems()
     {
-        
         foreach (var item in storeItems)
         {
-            
             GameObject obj = Instantiate(InventoryItem, storeItemContent);
 
             var itemPrice = obj.transform.Find("Price").GetComponent<TextMeshProUGUI>();
@@ -230,8 +217,7 @@ public class InventoryManager : MonoBehaviour
 
         }
     }
-
-
+    
     public void listInventoryItems(List<Item> items, Transform transform)
     {
         foreach (var item in items)
@@ -380,8 +366,6 @@ public class InventoryManager : MonoBehaviour
                             label.text = "Equipado";
                             break;
                     }
-                    
-
                 }
                 else
                 {
@@ -494,7 +478,6 @@ public class InventoryManager : MonoBehaviour
     }
     public void setInventoryItems(List<Item> items, Transform content, InventoryItemController[] controllersList)
     {
-
         controllersList = content.GetComponentsInChildren<InventoryItemController>();
         
         for (int i = 0; i < items.Count; i++)
@@ -516,7 +499,6 @@ public class InventoryManager : MonoBehaviour
 
     public void sortItems()
     {
-        
         skins.Clear();
         skinSets.Clear();
         accessories.Clear();
@@ -549,7 +531,6 @@ public class InventoryManager : MonoBehaviour
                 
             }
         }
-        
     }
 }
 

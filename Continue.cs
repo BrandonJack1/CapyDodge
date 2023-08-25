@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +15,8 @@ public class Continue : MonoBehaviour
     public GameObject bar;
     public GameObject[] acorns;
     public GameObject pauseButton;
+
+    public AudioSource musicSource;
     
     public bool timerIsRunning = false;
     public bool animationPlaying = false;
@@ -129,6 +132,12 @@ public class Continue : MonoBehaviour
 
         if (adContinue)
         {
+            
+            //remove the net that is already present in the game area to prevent bugs when collecting a net while having
+            //the net active
+            GameObject net = GameObject.Find("net (Power Up)(Clone)");
+            Destroy(net);
+            
             //allow the player to move
             PlayerMovement.playerMove = true;
 
@@ -143,7 +152,9 @@ public class Continue : MonoBehaviour
             }
             
          
-
+            //resume the music
+            musicSource.UnPause();
+            
             //show pause button
             pauseButton.SetActive(true);
             

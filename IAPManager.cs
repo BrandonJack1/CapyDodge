@@ -19,17 +19,11 @@ public static IAPManager instance;
     public AudioSource source;
     public AudioClip purchaseSound;
     
-
-   
-
-    //Step 1 create your products
-
     private string removeAds = "remove_ad";
     private string smallCoins = "small_coins";
     private string mediumCoins = "medium_coins";
     private string largeCoins = "large_coins";
-
-    //************************** Adjust these methods **************************************
+    
     public void InitializePurchasing()
     {
         if (IsInitialized()) { return; }
@@ -41,22 +35,16 @@ public static IAPManager instance;
         builder.AddProduct(largeCoins, ProductType.Consumable);
         UnityPurchasing.Initialize(this, builder);
     }
-
-
+    
     private bool IsInitialized()
     {
         return m_StoreController != null && m_StoreExtensionProvider != null;
     }
 
-
-    //Step 3 Create methods
-
     public void buyRemoveAds()
     {
         Debug.Log("Purchase Button Pressed");
         BuyProductID(removeAds);
-       
-        
     }
 
     public void buySmallCoins()
@@ -73,9 +61,7 @@ public static IAPManager instance;
         
         BuyProductID(largeCoins);
     }
-
-
-    //Step 4 modify purchasing
+    
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
         Debug.Log("Starting purchase prcoess result");
@@ -108,9 +94,7 @@ public static IAPManager instance;
         Debug.Log("Returning result");
         return PurchaseProcessingResult.Complete;
     }
-
     
-    //**************************** Dont worry about these methods ***********************************
     private void Awake()
     {
         TestSingleton();

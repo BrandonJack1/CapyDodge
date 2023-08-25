@@ -34,8 +34,6 @@ public class FirstTime : MonoBehaviour
     }
     public void next()
     {
-        
-        
         //used for Apple TV
 
         if (Application.platform == RuntimePlatform.tvOS)

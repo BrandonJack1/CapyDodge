@@ -58,7 +58,6 @@ public class PowerUp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (activatePowerUp)
         {
             activatePowerUp = false;
@@ -169,7 +168,6 @@ public class PowerUp : MonoBehaviour
 
     public void animateBar()
     {
-        
         LeanTween.scaleX(bar, 0, 10);
     }
 }

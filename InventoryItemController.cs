@@ -14,19 +14,11 @@ public class InventoryItemController : MonoBehaviour
   public AudioClip invalid;
   public Item item;
   
-  
-
-  public void RemoveItem()
-  {
-    
-    
-  }
   public void addItem(Item newItem)
   {
       item = newItem;
   }
-
-
+  
   public void buy()
   {
       //if its already purchased
@@ -106,10 +98,5 @@ public class InventoryItemController : MonoBehaviour
         InventoryManager.Instance.ListItems();
         
     }
-
-
-
-
-
   }
 }

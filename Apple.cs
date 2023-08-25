@@ -121,7 +121,6 @@ public class Apple : MonoBehaviour
             appleCollision = true;
             //hide the colliding apple
             
-            
             //get a random position
             float pos = rndPos(spawnRight, false);
             
@@ -174,29 +173,7 @@ public class Apple : MonoBehaviour
                 //add the force
                 rb.AddForce(new Vector2(xForce,yForce),ForceMode2D.Impulse);
             }
-            
-            //St Patricks
-            
-            /*if ((rnd == 7 || rnd == 4) && cloverActive == false )
-            {
-                cloverActive = true;
-                float cloverPos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
-                //spawn and play the leaf animation
-                particle.transform.position = new Vector3(pos, 4.5f, 0);
-                particle.GetComponent<ParticleSystem>().Play();
-        
-                //disable the leave after an amount of time
-                Source.PlayOneShot(leaves);
-        
-                //Create a new acorn to spawn
-               Instantiate(clover, new Vector3(cloverPos, 5.5f, 0), Quaternion.identity);
-                
-            }*/
-            
-
         }
-
-       
     }
 
     public float rndPos(bool RightPos, bool start)

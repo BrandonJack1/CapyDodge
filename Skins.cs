@@ -25,6 +25,11 @@ public class Skins : MonoBehaviour
     public GameObject sunglasses;
     public GameObject suit;
     public GameObject chef;
+
+    public GameObject construction;
+
+    public GameObject wizard;
+    public GameObject headBow;
     // Start is called before the first frame update
     void Start()
     {
@@ -180,6 +185,35 @@ public class Skins : MonoBehaviour
         else
         {
             chef.gameObject.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin Set") == "Construction")
+        {
+            construction.gameObject.SetActive(true);
+        }
+        else
+        {
+            construction.gameObject.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Accessory") == "Wizard")
+        {
+            wizard.gameObject.SetActive(true);
+            
+        }
+        else
+        {
+            wizard.gameObject.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Accessory") == "HeadBow")
+        {
+            headBow.gameObject.SetActive(true);
+            
+        }
+        else
+        {
+            headBow.gameObject.SetActive(false);
         }
     }
 

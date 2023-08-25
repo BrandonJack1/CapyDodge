@@ -22,9 +22,10 @@ public class GameOver : MonoBehaviour
     
     public float secondsToDestroy = 0.8f;
     public static bool continueUsed = false;
-    
+
+    public AudioSource musicSource;
     public AudioSource Source;
-    public  AudioClip acornCollect;
+    public AudioClip acornCollect;
     public Canvas canvas;
 
     public AudioClip acornCollect1;
@@ -66,7 +67,6 @@ public class GameOver : MonoBehaviour
 
     void Start()
     {
-
         animator = GetComponent<Animator>();
         continueUsed = false;
         pauseButton.SetActive(true);
@@ -143,7 +143,7 @@ public class GameOver : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Acorn"))
+        if (col.CompareTag("Acorn") || col.CompareTag(("GiantAcorn")))
         {
             //if the power up isnt active then end the game
             if (!PowerUp.active)
@@ -151,6 +151,7 @@ public class GameOver : MonoBehaviour
                 col.gameObject.tag = "Untagged";
                 
                 Source.Stop();
+                musicSource.Pause();
 
                 //if the continue is already used or the user removed the ads, skip to game over
 
@@ -170,39 +171,62 @@ public class GameOver : MonoBehaviour
                 //get rid of acorn
                 Destroy(col.gameObject);
 
+                if (col.CompareTag("GiantAcorn"))
+                {
+                    Acorn.giantActive = false;
+                }
+                
+                //Game mode 1
                 if (activeScene == 2)
                 {
                     GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
 
                     if (Combo.comboActive)
-                    {
+                    {   
+                        //increase combo multiplier value
                         Combo.multiplier += 0.25f;
+                        
+                        //add default acorn value * multiplier to the score 
                         Score.score += (int)(50 * Combo.multiplier);
+                        
+                        //spawn the acorn score value
                         prefab.GetComponentInChildren<TextMesh>().text = ((int)(50 * Combo.multiplier)).ToString();
                         prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
                         Combo.comboTimer = 0.8f;
+                        
+                        //play the sound for the combo
                         playComboSound();
 
-                        //delete the previous one to prevent overlap
+                        //delete the previous combo text to prevent overlap
                         if (previousComboText != null)
                         {
                             Destroy(previousComboText);
                         }
-
+                        
+                        //spawn combo value in center of the screen
                         GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
+                        //set an empty parent so animation works
                         comboUI.transform.SetParent(empty.transform, false);
-                        comboUI.GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+                        
+                        //set the color of the multiplier text
+                        
+                        Transform firstChild = comboUI.transform.GetChild(0);
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+                        comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
 
                         previousComboText = comboUI;
                         float rndRotate = Random.Range(-10, 10);
                         
                         
                         comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
-                        Destroy(comboUI, 0.8f);
+                        Destroy(comboUI, 1f);
 
 
                         comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().text =
+                            comboUI.GetComponent<TextMeshProUGUI>().text;
                         comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
+                        
                         //instantiate combo UI
                         //random rotation
 
@@ -282,6 +306,7 @@ public class GameOver : MonoBehaviour
                 col.gameObject.tag = "Untagged";
                 
                 Source.Stop();
+                musicSource.Pause();
 
                 //if the continue is already used or the user removed the ads, skip to game over
 
@@ -309,8 +334,8 @@ public class GameOver : MonoBehaviour
                     if (Combo.comboActive)
                     {
                         Combo.multiplier += 0.25f;
-                        Score.score += (int)(100 * Combo.multiplier);
-                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(100 * Combo.multiplier)).ToString();
+                        Score.score += (int)(200 * Combo.multiplier);
+                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(200 * Combo.multiplier)).ToString();
                         prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
                         Combo.comboTimer = 0.8f;
                         playComboSound();
@@ -328,11 +353,16 @@ public class GameOver : MonoBehaviour
                         previousComboText = comboUI;
                         float rndRotate = Random.Range(-10, 10);
                         
-                        
+                        Transform firstChild = comboUI.transform.GetChild(0);
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
                         comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
                         Destroy(comboUI, 0.8f);
                         
                         comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().text =
+                            comboUI.GetComponent<TextMeshProUGUI>().text;
+                        
+                        comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
                         comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
                         //instantiate combo UI
                         //random rotation
@@ -342,9 +372,9 @@ public class GameOver : MonoBehaviour
                     {
                         Combo.comboActive = true;
                         //increase score
-                        Score.score += 100;
+                        Score.score += 200;
                         //spawn a floating number
-                        prefab.GetComponentInChildren<TextMesh>().text = "100";
+                        prefab.GetComponentInChildren<TextMesh>().text = "200";
                         Source.PlayOneShot(acornCollect);
                     }
                     Destroy(prefab, secondsToDestroy);

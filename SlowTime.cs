@@ -61,7 +61,7 @@ public class SlowTime : MonoBehaviour
             timer.Reset();
             
             //Spawn power up
-            spawnPowerUp();
+            //spawnPowerUp();
         }
     }
     

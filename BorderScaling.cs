@@ -10,11 +10,7 @@ public class BorderScaling : MonoBehaviour
     public GameObject background;
 
     private void Start() => this.scaleBorderFitScreen();
-
-    private void Update()
-    {
-    }
-
+    
     private void scaleBorderFitScreen()
     {
         // float num1 = (float)Screen.width / (float)Screen.height;

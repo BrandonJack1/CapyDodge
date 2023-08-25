@@ -50,8 +50,8 @@ public class PlayerMovement : MonoBehaviour
         rightOffset = Camera.main.pixelWidth / 17;
         
         //Define the size of the character
-        playerWidth = 0.2481744f;
-        playerHeight = 0.2857763f;
+        playerWidth = 0.28f;
+        playerHeight = 0.28f;
         
 /*
 #if UNITY_IOS
