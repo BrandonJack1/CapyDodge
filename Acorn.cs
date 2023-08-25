@@ -17,16 +17,16 @@ public class Acorn : MonoBehaviour
     public float leftOffset;
     public float rightOffset;
     
-    public bool speed1 = false;
-    public bool speed2 = false;
-    public bool speed3 = false;
-    public bool speed4 = false;
-    public bool speed5 = false;
-    public bool speed6 = false;
-    public bool speed7 = false;
-    public bool speed8 = false;
-    public bool speed9 = false; 
-    public bool speed10 = false;
+    private bool speed1 = false;
+    private bool speed2 = false;
+    private bool speed3 = false;
+    private bool speed4 = false;
+    private bool speed5 = false;
+    private bool speed6 = false;
+    private bool speed7 = false;
+    private bool speed8 = false;
+    private bool speed9 = false; 
+    private bool speed10 = false;
     
     public AudioSource source;
     public AudioClip leaves;
@@ -34,11 +34,6 @@ public class Acorn : MonoBehaviour
     
     private ParticleSystem particles;
     public Camera mainCamera;
-    
-    public Sprite easterEgg1;
-    public Sprite easterEgg2;
-    public Sprite easterEgg3;
-
     public static bool slowActive;
     
     void Start()
