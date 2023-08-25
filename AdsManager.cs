@@ -6,27 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    // Start is called before the first frame update
-
-    public string appleID = "5107550";
-    public string androidID = "5107551";
-
-    public string gameID;
+    private string appleID = "5107550";
+    private string androidID = "5107551";
+    private string gameID;
+    private string interstitalAd = "video";
+    
+    [SerializeField] private GameObject rewardedError;
+    [SerializeField] private GameObject continueBtn;
+    
     private bool testMode = false;
 
     public static int turnCount = 0;
-    public string interstitalAd = "video";
-    public int activeScene;
-
-    public GameObject rewardedError;
-    public GameObject continueBtn;
+    private int activeScene;
+    private int switchScene;
     
-    public int switchScene;
-    
-    public GameObject noThanks;
     void Start()
     {
-        
         //set the game id based on the device
         if (Application.platform == RuntimePlatform.IPhonePlayer)
         {
@@ -43,7 +38,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         gameID = appleID;
         
 #endif
-        intializeAds();
+        IntializeAds();
         LoadBannerAd();
         
         //load ads
@@ -56,10 +51,10 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         {
             Advertisement.Load("Interstitial_Android");
             Advertisement.Load("Rewarded_Android");
-            
         }
     }
-    public void intializeAds()
+    
+    public void IntializeAds()
     {
         Advertisement.Initialize(gameID, testMode, this);
     }
@@ -76,7 +71,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         }
     }
     
-    public void loadInterstialAd()
+    public void LoadInterstialAd()
     {
         //show the add every 2 retries if they have not removed ads
         if (turnCount >= 1 && PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
@@ -94,9 +89,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
             }
             
 #if UNITY_EDITOR
-            
             Advertisement.Show("Interstitial_iOS",this);
-            
 #endif
         }
         else
@@ -106,7 +99,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         }
     }
     
-    public void loadInterstialAdMenu()
+    public void LoadInterstialAdMenu()
     {
         //show the add every 2 retries if they have not removed ads
         if (turnCount >= 1 && PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
@@ -123,11 +116,9 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
                 Advertisement.Show("Interstitial_Android",this);
             }
             
-        #if UNITY_EDITOR
-            
+#if UNITY_EDITOR
             Advertisement.Show("Interstitial_iOS",this);
-            
-        #endif
+#endif
         }
         else
         {
@@ -136,7 +127,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         }
     }
 
-    public void loadRewardedVideo()
+    public void LoadRewardedVideo()
     {
         if (Application.platform == RuntimePlatform.IPhonePlayer && PlayerPrefs.GetString("ShowAds", "Yes") == "Yes")
         {
@@ -147,12 +138,12 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
             Advertisement.Show("Rewarded_Android", this);
         }
         
-    #if UNITY_EDITOR
-            
+#if UNITY_EDITOR
         Advertisement.Show("Rewarded_iOS",this);
-            
-    #endif
+#endif
     }
+    
+    //legacy method
     public void LoadBannerAd()
     {
         
@@ -160,28 +151,23 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
     
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
-        
         if (placementId.Equals("Rewarded_iOS") && UnityAdsShowCompletionState.COMPLETED.Equals(showCompletionState))
         {
             Continue.adContinue = true;
-
         }
         else if (placementId.Equals("Interstitial_iOS"))
         {
             SceneManager.LoadScene(switchScene);
             turnCount = 0;
-
         }
         else if (placementId.Equals("Rewarded_Android") && UnityAdsShowCompletionState.COMPLETED.Equals(showCompletionState))
         {
             Continue.adContinue = true;
-
         }
         else if (placementId.Equals("Interstitial_Android"))
         {
             SceneManager.LoadScene(2);
             turnCount = 0;
-
         }
         Time.timeScale = 1;
     }
@@ -197,7 +183,8 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
             Advertisement.Banner.Show("Banner_Android");
         }
     }
-
+    
+    //legacy method
     public void OnInitializationComplete()
     {
         
@@ -207,19 +194,19 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
     {
         throw new System.NotImplementedException();
     }
-
+    
+    //legacy method
     public void OnUnityAdsAdLoaded(string placementId)
     {
-        //Advertisement.Show(placementId,this);
+        
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
     {
         if (placementId == "Rewarded_iOS")
-        {
+        { 
             rewardedError.SetActive(true);
             continueBtn.SetActive(false);
-            
         }
     }
     
@@ -227,10 +214,11 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
     {
         throw new System.NotImplementedException();
     }
-
+    
+    //legacy method
     public void OnUnityAdsShowStart(string placementId)
     {
-        //throw new System.NotImplementedException();
+        
     }
 
     public void OnUnityAdsShowClick(string placementId)
