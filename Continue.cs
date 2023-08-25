@@ -198,7 +198,7 @@ public class Continue : MonoBehaviour
 
         if (PlayerPrefs.GetInt("Coins") >= 100)
         {
-            Coins.subtractCoins(100);
+            Coins.SubtractCoins(100);
             adContinue = true;
         }
         

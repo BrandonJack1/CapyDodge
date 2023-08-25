@@ -192,7 +192,7 @@ public class Store : MonoBehaviour
                     source.PlayOneShot(invalid);
                     return;
                 }
-                Coins.subtractCoins(1000);
+                Coins.SubtractCoins(1000);
                 source.PlayOneShot(clip);
                 PlayerPrefs.SetString("Player " + btn.name, "Not Equipped");
             }
@@ -204,7 +204,7 @@ public class Store : MonoBehaviour
                     source.PlayOneShot(invalid);
                     return;
                 }
-                Coins.subtractCoins(2000);
+                Coins.SubtractCoins(2000);
                 source.PlayOneShot(clip);
                 PlayerPrefs.SetString("Player " + btn.name, "Not Equipped");
             }
@@ -216,7 +216,7 @@ public class Store : MonoBehaviour
                     source.PlayOneShot(invalid);
                     return;
                 }
-                Coins.subtractCoins(3000);
+                Coins.SubtractCoins(3000);
                 source.PlayOneShot(clip);
                 PlayerPrefs.SetString("Player " + btn.name, "Not Equipped");
             }

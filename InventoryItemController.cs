@@ -31,7 +31,7 @@ public class InventoryItemController : MonoBehaviour
         if (PlayerPrefs.GetInt("Coins") >= item.price)
         {
             
-            Coins.subtractCoins(item.price);
+            Coins.SubtractCoins(item.price);
             PlayerPrefs.SetString("Player " + item.itemName, "Not Equipped");
             Store.playPurchaseSound = true;
             InventoryManager.Instance.ListItems();

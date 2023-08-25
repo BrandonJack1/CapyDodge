@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Coins : MonoBehaviour
 {
-    public static int globalCoins;
-
+    private static int globalCoins;
     public TextMeshProUGUI coinsAmt;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +15,7 @@ public class Coins : MonoBehaviour
         globalCoins = PlayerPrefs.GetInt("Coins", 0);
         coinsAmt.text = globalCoins.ToString();
     }
-    public static void addCoins(int coins) => PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + coins);
+    public static void AddCoins(int coins) => PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + coins);
 
-    public static void subtractCoins(int numCoins) => PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - numCoins);
+    public static void SubtractCoins(int numCoins) => PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - numCoins);
 }

@@ -174,13 +174,13 @@ public class Apple : MonoBehaviour
         float pos;
         
         //alternate between spawning Apples on the left and right sides of the screen
-        if (spawnRight)
+        if (this.spawnRight)
         {
-            spawnRight = false;
+            this.spawnRight = false;
         }
         else
         {
-            spawnRight = true;
+            this.spawnRight = true;
         }
         
         //if this is the start of the game just spawn the apple anywhere
@@ -191,7 +191,7 @@ public class Apple : MonoBehaviour
         else
         {
             //spawn the apple on the right side of the screen
-            if (spawnRight)
+            if (this.spawnRight)
             {
                 pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(Camera.main.pixelWidth/2 + rightOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(mainCamera.pixelWidth - rightOffset, 1)).x);
             }
