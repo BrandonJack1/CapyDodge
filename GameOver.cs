@@ -15,7 +15,6 @@ using Random = UnityEngine.Random;
 public class GameOver : MonoBehaviour
 {
     // Start is called before the first frame update
-    
     [SerializeField] private GameObject floatingScore;
     public GameObject continueScreen;
     public GameObject pauseButton;
