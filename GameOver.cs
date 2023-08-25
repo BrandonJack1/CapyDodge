@@ -14,7 +14,6 @@ using Random = UnityEngine.Random;
 
 public class GameOver : MonoBehaviour
 {
-    // Start is called before the first frame update
     [SerializeField] private GameObject floatingScore;
     public GameObject continueScreen;
     public GameObject pauseButton;
@@ -156,12 +155,12 @@ public class GameOver : MonoBehaviour
 
                 if (continueUsed)
                 {
-                    StartCoroutine(gameOverAnimation(false,col.gameObject));
+                    StartCoroutine(GameOverAnimation(false,col.gameObject));
                 }
                 //offer the continue
                 else
                 {
-                    StartCoroutine(gameOverAnimation(true, col.gameObject));
+                    StartCoroutine(GameOverAnimation(true, col.gameObject));
                 }
             }
             //if the power up is active
@@ -190,11 +189,11 @@ public class GameOver : MonoBehaviour
                         
                         //spawn the acorn score value
                         prefab.GetComponentInChildren<TextMesh>().text = ((int)(50 * Combo.multiplier)).ToString();
-                        prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
+                        prefab.GetComponentInChildren<TextMesh>().color = ComboColor(Combo.multiplier, false);
                         Combo.comboTimer = 0.8f;
                         
                         //play the sound for the combo
-                        playComboSound();
+                        PlayComboSound();
 
                         //delete the previous combo text to prevent overlap
                         if (previousComboText != null)
@@ -210,7 +209,7 @@ public class GameOver : MonoBehaviour
                         //set the color of the multiplier text
                         
                         Transform firstChild = comboUI.transform.GetChild(0);
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = ComboColor(Combo.multiplier, true);
                         comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
 
                         previousComboText = comboUI;
@@ -311,12 +310,12 @@ public class GameOver : MonoBehaviour
 
                 if (continueUsed)
                 {
-                    StartCoroutine(gameOverAnimation(false,col.gameObject));
+                    StartCoroutine(GameOverAnimation(false,col.gameObject));
                 }
                 //offer the continue
                 else
                 {
-                    StartCoroutine(gameOverAnimation(true, col.gameObject));
+                    StartCoroutine(GameOverAnimation(true, col.gameObject));
                 }
                 
             }
@@ -335,9 +334,9 @@ public class GameOver : MonoBehaviour
                         Combo.multiplier += 0.25f;
                         Score.score += (int)(200 * Combo.multiplier);
                         prefab.GetComponentInChildren<TextMesh>().text = ((int)(200 * Combo.multiplier)).ToString();
-                        prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
+                        prefab.GetComponentInChildren<TextMesh>().color = ComboColor(Combo.multiplier, false);
                         Combo.comboTimer = 0.8f;
-                        playComboSound();
+                        PlayComboSound();
                         
                         //delete the previous one to prevent overlap
                         if (previousComboText != null)
@@ -347,25 +346,21 @@ public class GameOver : MonoBehaviour
 
                         GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
                         comboUI.transform.SetParent(empty.transform, false);
-                        comboUI.GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+                        comboUI.GetComponent<TextMeshProUGUI>().color = ComboColor(Combo.multiplier, true);
 
                         previousComboText = comboUI;
                         float rndRotate = Random.Range(-10, 10);
                         
                         Transform firstChild = comboUI.transform.GetChild(0);
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = ComboColor(Combo.multiplier, true);
                         comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
                         Destroy(comboUI, 0.8f);
                         
                         comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().text =
-                            comboUI.GetComponent<TextMeshProUGUI>().text;
+                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().text = comboUI.GetComponent<TextMeshProUGUI>().text;
                         
                         comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
                         comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
-                        //instantiate combo UI
-                        //random rotation
-
                     }
                     else
                     {
@@ -385,7 +380,7 @@ public class GameOver : MonoBehaviour
         }
     }
     
-    IEnumerator gameOverAnimation(bool offerContinue, GameObject col)
+    IEnumerator GameOverAnimation(bool offerContinue, GameObject col)
     {
         //hide the pause button
         pauseButton.SetActive(false);
@@ -405,29 +400,34 @@ public class GameOver : MonoBehaviour
         //hide acorn
         col.SetActive(false);
         
-        //if the user is eligble for a continue
+        //if the user is eligible for a continue
         if (offerContinue)
         {
+            //freeze time
             Time.timeScale = 0f;
+            
+            //show continue screen
             continueScreen.SetActive(true);
-
+            
+            //Apple TV set selection
             if (Application.platform == RuntimePlatform.tvOS)
             {
                 var eventSystem = EventSystem.current;
                 eventSystem.SetSelectedGameObject(continueBtn, new BaseEventData(eventSystem));
             }
-            
         }
+        //if the player has already used a continue
         else
-        {
+        {   
+            //freeze time and change to game over scene
             Time.timeScale = 0f;
             SceneManager.LoadScene(3);
-            
         }
     }
 
-    public void playComboSound()
+    private void PlayComboSound()
     {
+        //play the pitched sound based on the combo the player is on 
         switch (Combo.multiplier)
         {
             case 1.25f:
@@ -462,20 +462,12 @@ public class GameOver : MonoBehaviour
                 break;
         }
     }
-    
-    public Color comboColor(float multiplier, bool largeText)
+
+    private static Color ComboColor(float multiplier, bool largeText)
     {
-
-        byte transparency;
-        if (largeText)
-        {
-            transparency = 230;
-        }
-        else
-        {
-            transparency = 255;
-        }
-
+        var transparency = largeText ? (byte)230 : (byte)255;
+        
+        //set the color of the multiplier based on what combo the player is at
         Color returnColor;
         switch (multiplier)
         {
