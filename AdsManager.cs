@@ -6,17 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    private string appleID = "5107550";
-    private string androidID = "5107551";
+    private const string AppleID = "5107550";
+    private const string AndroidID = "5107551";
     private string gameID;
-    private string interstitalAd = "video";
+    private string interstitialAd = "video";
     
     [SerializeField] private GameObject rewardedError;
     [SerializeField] private GameObject continueBtn;
-    
-    private bool testMode = false;
 
-    public static int turnCount = 0;
+    private const bool TestMode = false;
+
+    private static int turnCount = 0;
     private int activeScene;
     private int switchScene;
     
@@ -25,17 +25,17 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         //set the game id based on the device
         if (Application.platform == RuntimePlatform.IPhonePlayer)
         {
-            gameID = appleID;
+            gameID = AppleID;
         }
         else if (Application.platform == RuntimePlatform.Android)
         {
-            gameID = androidID;
+            gameID = AndroidID;
         }
         
 #if UNITY_EDITOR
         
         //set game id to apple id when its the editor to prevent errors
-        gameID = appleID;
+        gameID = AppleID;
         
 #endif
         IntializeAds();
@@ -56,7 +56,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
     
     public void IntializeAds()
     {
-        Advertisement.Initialize(gameID, testMode, this);
+        Advertisement.Initialize(gameID, TestMode, this);
     }
 
     // Update is called once per frame

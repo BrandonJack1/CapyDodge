@@ -128,7 +128,7 @@ public class Apple : MonoBehaviour
             col.gameObject.SetActive(false);
             Destroy(col.transform.parent.gameObject);
             
-            
+            //instantiate a floating score for when the apple is collected
             GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
             prefab.GetComponentInChildren<TextMesh>().text = "20";
             Source.PlayOneShot(collectSound);
