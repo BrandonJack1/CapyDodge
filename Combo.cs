@@ -10,7 +10,7 @@ public class Combo : MonoBehaviour
 {
     public static bool timerStarted = false;
     public static bool comboActive = false;
-    public static bool messageActive;
+    private static bool messageActive;
     
     public static float multiplier= 1f;
     public static float comboTimer;
@@ -21,7 +21,8 @@ public class Combo : MonoBehaviour
 
     [SerializeField] private AudioSource source;
     [SerializeField] private AudioClip clip;
-    
+    private static readonly int ComboTrigger = Animator.StringToHash("ComboTrigger");
+
     void Start()
     {
         //set the timer
@@ -56,26 +57,25 @@ public class Combo : MonoBehaviour
                 
                 //choose a random message to show
                 int rnd = Random.Range(1, 5);
-                string message;
                 lang = PlayerPrefs.GetInt("Lang Pref", 0);
-                message = GetMessage(rnd, lang);
+                var message = GetMessage(rnd, lang);
 
                 //set the other layer of the text to the same message
                 comboMessage.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = message;
                 comboMessage.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = message;
-                comboMessage.transform.GetComponent<Animator>().SetTrigger("ComboTrigger");
+                comboMessage.transform.GetComponent<Animator>().SetTrigger(ComboTrigger);
                 
                 //play the bonus sound effect 
                 source.PlayOneShot(clip);
                 
-                StartCoroutine(comboMessageActive(1.7f));
+                StartCoroutine(ComboMessageActive(1.7f));
                 Destroy(comboMessage, 1.4f);
             }
             multiplier = 1f;
         }
     }
 
-    static IEnumerator comboMessageActive(float secs)
+    static IEnumerator ComboMessageActive(float secs)
     {
         yield return new WaitForSeconds(secs);
         messageActive = false;
