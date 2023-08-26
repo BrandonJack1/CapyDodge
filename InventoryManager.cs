@@ -5,47 +5,42 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
     
-    public static InventoryManager Instance;
-
     public List<Item> masterList = new List<Item>();
-
     public List<Item> skinSets = new List<Item>();
     public List<Item> skins = new List<Item>();
     public List<Item> accessories = new List<Item>();
     public List<Item> storeItems = new List<Item>();
     
     public Transform storeItemContent;
-
     public Transform skinSetContent;
     public Transform skinContent;
     public Transform accessoryContent;
-    public GameObject InventoryItem;
     
-    public InventoryItemController[] SkinSetItemController;
-    public InventoryItemController[] SkinItemController;
-    public InventoryItemController[] AccessoryItemController;
+    [FormerlySerializedAs("InventoryItem")] public GameObject inventoryItem;
+    [FormerlySerializedAs("SkinSetItemController")] public InventoryItemController[] skinSetItemController;
+    [FormerlySerializedAs("SkinItemController")] public InventoryItemController[] skinItemController;
+    [FormerlySerializedAs("AccessoryItemController")] public InventoryItemController[] accessoryItemController;
     public InventoryItemController[] storeItemsControllers;
     
     public static bool relist = false;
-
-    public int lang;
+    private int lang;
 
     private void Awake()
     {
-        Instance = this;
+        instance = this;
     }
     
     public void Start()
     {
         lang = PlayerPrefs.GetInt("Lang Pref");
         ListItems();
-        
-
     }
     
     public void ListItems()
@@ -89,19 +84,18 @@ public class InventoryManager : MonoBehaviour
         ListInventoryItems(skins, skinContent);
         ListInventoryItems(accessories, accessoryContent);
         ListStoreItems();
-
-
+        
         SetStoreItems();
-        SetInventoryItems(skins, skinContent, SkinItemController);
-        SetInventoryItems(skinSets, skinSetContent, SkinSetItemController);
-        SetInventoryItems(accessories, accessoryContent, AccessoryItemController);
+        SetInventoryItems(skins, skinContent, skinItemController);
+        SetInventoryItems(skinSets, skinSetContent, skinSetItemController);
+        SetInventoryItems(accessories, accessoryContent, accessoryItemController);
     }
 
     private void ListStoreItems()
     {
         foreach (var item in storeItems)
         {
-            GameObject obj = Instantiate(InventoryItem, storeItemContent);
+            GameObject obj = Instantiate(inventoryItem, storeItemContent);
 
             var itemPrice = obj.transform.Find("Price").GetComponent<TextMeshProUGUI>();
             var itemIcon = obj.transform.Find("ItemIcon").GetComponent<Image>();
@@ -136,6 +130,7 @@ public class InventoryManager : MonoBehaviour
                     label.text = "Comprar";
                     break;
             }
+            
             if (item.skinSet)
             { 
                 switch (lang)
@@ -222,7 +217,7 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (var item in items)
         {
-            GameObject obj = Instantiate(InventoryItem, transform);
+            GameObject obj = Instantiate(inventoryItem, transform);
             var itemPrice = obj.transform.Find("Price").GetComponent<TextMeshProUGUI>();
             var itemIcon = obj.transform.Find("ItemIcon").GetComponent<Image>();
             var label = obj.transform.Find("Buy Button").transform.Find("Label").GetComponent<TextMeshProUGUI>();

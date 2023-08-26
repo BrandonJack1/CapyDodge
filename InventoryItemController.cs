@@ -21,7 +21,7 @@ public class InventoryItemController : MonoBehaviour
 
     public void Buy()
     {
-        InventoryManager.Instance.ListItems();
+        InventoryManager.instance.ListItems();
 
         //if the player clicks on item and does not own the item 
         if (PlayerPrefs.GetString("Player " + item.itemName) != "Equipped" &&
@@ -38,7 +38,7 @@ public class InventoryItemController : MonoBehaviour
                 Store.playPurchaseSound = true;
 
                 //refresh inventory list now that this item has been added
-                InventoryManager.Instance.ListItems();
+                InventoryManager.instance.ListItems();
             }
             else
             {
@@ -90,7 +90,7 @@ public class InventoryItemController : MonoBehaviour
             PlayerPrefs.SetString("Active Player Skin Set", "");
         }
         
-        InventoryManager.Instance.ListItems();
+        InventoryManager.instance.ListItems();
     }
 }
 

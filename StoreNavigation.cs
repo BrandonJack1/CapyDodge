@@ -74,7 +74,7 @@ public class StoreNavigation : MonoBehaviour
             storeBtn.GetComponent<Image>().sprite = normal;
         }
 
-        if (InventoryManager.Instance.storeItems.Count == 0)
+        if (InventoryManager.instance.storeItems.Count == 0)
         {
             allStoreBought.SetActive(true);
         }
@@ -83,7 +83,7 @@ public class StoreNavigation : MonoBehaviour
             allStoreBought.SetActive(false);
         }
 
-        if (InventoryManager.Instance.skinSets.Count == 0)
+        if (InventoryManager.instance.skinSets.Count == 0)
         {
             
             noSkinSetsOwned.SetActive(true);
@@ -93,7 +93,7 @@ public class StoreNavigation : MonoBehaviour
             noSkinSetsOwned.SetActive(false);
         }
         
-        if (InventoryManager.Instance.skins.Count == 0)
+        if (InventoryManager.instance.skins.Count == 0)
         {
             
             noSkinsOwned.SetActive(true);
@@ -103,7 +103,7 @@ public class StoreNavigation : MonoBehaviour
             noSkinsOwned.SetActive(false);
         }
         
-        if (InventoryManager.Instance.accessories.Count == 0)
+        if (InventoryManager.instance.accessories.Count == 0)
         {
             
             noAccessoriesOwned.SetActive(true);
