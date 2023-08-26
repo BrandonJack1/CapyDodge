@@ -9,30 +9,27 @@ using Product = UnityEngine.Purchasing.Product;
 
 public class IAPManager : MonoBehaviour, IStoreListener
 {
-    
-    
-public static IAPManager instance;
-
+    public static IAPManager instance;
     private static IStoreController m_StoreController;
     private static IExtensionProvider m_StoreExtensionProvider;
 
-    public AudioSource source;
-    public AudioClip purchaseSound;
-    
-    private string removeAds = "remove_ad";
-    private string smallCoins = "small_coins";
-    private string mediumCoins = "medium_coins";
-    private string largeCoins = "large_coins";
-    
+    [SerializeField] private  AudioSource source;
+    [SerializeField] private  AudioClip purchaseSound;
+
+    private const string REMOVE_ADS = "remove_ad";
+    private const string SMALL_COINS = "small_coins";
+    private const string MEDIUM_COINS = "medium_coins";
+    private const string LARGE_COINS = "large_coins";
+
     public void InitializePurchasing()
     {
         if (IsInitialized()) { return; }
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-        //Step 2 choose if your product is a consumable or non consumable
-        builder.AddProduct(removeAds, ProductType.NonConsumable);
-        builder.AddProduct(smallCoins, ProductType.Consumable);
-        builder.AddProduct(mediumCoins, ProductType.Consumable);
-        builder.AddProduct(largeCoins, ProductType.Consumable);
+       
+        builder.AddProduct(REMOVE_ADS, ProductType.NonConsumable);
+        builder.AddProduct(SMALL_COINS, ProductType.Consumable);
+        builder.AddProduct(MEDIUM_COINS, ProductType.Consumable);
+        builder.AddProduct(LARGE_COINS, ProductType.Consumable);
         UnityPurchasing.Initialize(this, builder);
     }
     
@@ -43,55 +40,61 @@ public static IAPManager instance;
 
     public void BuyRemoveAds()
     {
-        Debug.Log("Purchase Button Pressed");
-        BuyProductID(removeAds);
+        BuyProductID(REMOVE_ADS);
     }
 
     public void BuySmallCoins()
     {
-        BuyProductID(smallCoins);
+        BuyProductID(SMALL_COINS);
     }
     public void BuyMediumCoins()
     {
         
-        BuyProductID(mediumCoins);
+        BuyProductID(MEDIUM_COINS);
     }
     public void BuyLargeCoins()
     {
-        
-        BuyProductID(largeCoins);
+        BuyProductID(LARGE_COINS);
     }
     
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
-        Debug.Log("Starting purchase prcoess result");
-        if (String.Equals(args.purchasedProduct.definition.id, removeAds, StringComparison.Ordinal))
+        if (String.Equals(args.purchasedProduct.definition.id, REMOVE_ADS, StringComparison.Ordinal))
         {
-            Debug.Log("Purchase was success");
+            //play purchase sound
             source.PlayOneShot(purchaseSound);
+            
+            //record that the player bought the remove ads
             PlayerPrefs.SetString("ShowAds", "No");
             
         }
-        else if (String.Equals(args.purchasedProduct.definition.id, smallCoins, StringComparison.Ordinal))
+        else if (String.Equals(args.purchasedProduct.definition.id, SMALL_COINS, StringComparison.Ordinal))
         {
+            //play purchase sound
             source.PlayOneShot(purchaseSound);
+            
+            //add 1000 coins to the players balance
             Coins.AddCoins(1000);
         }
-        else if (String.Equals(args.purchasedProduct.definition.id, mediumCoins, StringComparison.Ordinal))
+        else if (String.Equals(args.purchasedProduct.definition.id, MEDIUM_COINS, StringComparison.Ordinal))
         {
+            //play purchase sound
             source.PlayOneShot(purchaseSound);
+            
+            //add 5000 coins to the players balance
             Coins.AddCoins(5000);
         }
-        else if (String.Equals(args.purchasedProduct.definition.id, largeCoins, StringComparison.Ordinal))
+        else if (String.Equals(args.purchasedProduct.definition.id, LARGE_COINS, StringComparison.Ordinal))
         {
+            //play purchase sound
             source.PlayOneShot(purchaseSound);
+            
+            //add 10000 coins to the players balance
             Coins.AddCoins(10000);
         }
         {
             Debug.Log("Purchase Failed");
         }
-        
-        Debug.Log("Returning result");
         return PurchaseProcessingResult.Complete;
     }
     
@@ -117,13 +120,10 @@ public static IAPManager instance;
     {
         if (IsInitialized())
         {
-            Debug.Log("Intialized, starting purchase");
             Product product = m_StoreController.products.WithID(productId);
             if (product != null && product.availableToPurchase)
             {
-                Debug.Log(string.Format("Purchasing product asychronously: '{0}'", product.definition.id));
                 m_StoreController.InitiatePurchase(product);
-                Debug.Log("intitiate purchase complete");
             }
             else
             {
@@ -147,8 +147,6 @@ public static IAPManager instance;
         if (Application.platform == RuntimePlatform.IPhonePlayer ||
             Application.platform == RuntimePlatform.OSXPlayer)
         {
-            Debug.Log("RestorePurchases started ...");
-
             var apple = m_StoreExtensionProvider.GetExtension<IAppleExtensions>();
             apple.RestoreTransactions((result) => {
                 Debug.Log("RestorePurchases continuing: " + result + ". If no further messages, no purchases available to restore.");
@@ -162,7 +160,6 @@ public static IAPManager instance;
 
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        Debug.Log("OnInitialized: PASS");
         m_StoreController = controller;
         m_StoreExtensionProvider = extensions;
     }

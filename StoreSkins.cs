@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class storeSkins : MonoBehaviour
+public class StoreSkins : MonoBehaviour
 {
     public GameObject topHat;
     public GameObject santaHat;
