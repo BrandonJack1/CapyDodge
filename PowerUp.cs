@@ -61,7 +61,7 @@ public class PowerUp : MonoBehaviour
         if (activatePowerUp)
         {
             activatePowerUp = false;
-            spawnPowerUp();
+            SpawnPowerUp();
         }
         
         //if the player collects 10 apples
@@ -74,7 +74,7 @@ public class PowerUp : MonoBehaviour
             if (powerUpPresent != true)
             {
                 powerUpPresent = true;
-                spawnPowerUp();
+                SpawnPowerUp();
             }
 
         }
@@ -105,12 +105,12 @@ public class PowerUp : MonoBehaviour
                 Apple.appleCount = 0;
 
                 //TIMED GAME MODE
-                Timer.netSecondsCount = 25f;
+                //Timer.netSecondsCount = 25f;
             }
         }
     }
 
-    public void spawnPowerUp()
+    private void SpawnPowerUp()
     {
 
         powerUpPresent = true;
@@ -124,11 +124,11 @@ public class PowerUp : MonoBehaviour
         GameObject net = Object.Instantiate<GameObject>(powerUp, new Vector3(pos, 5.5f, 0), Quaternion.identity);
         
         //if the player doesnt pick up the net for an amount of time, point an arrow to it
-        StartCoroutine(netPoint(net));
+        StartCoroutine(NetPoint(net));
 
     }
-    
-    IEnumerator netPoint(GameObject net)
+
+    static IEnumerator NetPoint(GameObject net)
     {
         //enable the arrow pointing to the net
         yield return new WaitForSeconds(5);
@@ -161,12 +161,12 @@ public class PowerUp : MonoBehaviour
             
             //scale bar back to 1
             bar.transform.localScale = new Vector3(1, 1, 1);
-            animateBar();
+            AnimateBar();
 
         }
     }
 
-    public void animateBar()
+    private void AnimateBar()
     {
         LeanTween.scaleX(bar, 0, 10);
     }

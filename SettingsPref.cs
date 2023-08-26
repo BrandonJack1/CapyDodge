@@ -229,7 +229,7 @@ public class SettingsPref : MonoBehaviour
         }
     }
 
-    public void switchControls()
+    public void SwitchControls()
     {
         
         if (PlayerPrefs.GetString("Controls", "Tilt") == "Touch")
@@ -246,7 +246,7 @@ public class SettingsPref : MonoBehaviour
         
     }
 
-    public void swtichSound()
+    public void SwitchSound()
     {
         if (PlayerPrefs.GetString("Sound", "On") == "On")
         {
@@ -262,7 +262,7 @@ public class SettingsPref : MonoBehaviour
         
     }
 
-    public void switchMusic()
+    public void SwitchMusic()
     {
         
         if (PlayerPrefs.GetString("Music", "On") == "On")
@@ -276,19 +276,19 @@ public class SettingsPref : MonoBehaviour
         }
     }
 
-    public void reset()
+    public void Reset()
     {
         
         PlayerPrefs.DeleteAll();
     }
 
-    public void showCanvas()
+    public void ShowCanvas()
     {
         helpCanvas.SetActive(true);
         
     }
 
-    public void hideCanvas()
+    public void HideCanvas()
     {
         
         helpCanvas.SetActive(false);

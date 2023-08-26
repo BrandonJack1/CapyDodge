@@ -42,13 +42,13 @@ public class Language : MonoBehaviour
         pannel.SetActive(false);
     }
 
-    public void closePannel()
+    public void ClosePannel()
     {
         pannel.SetActive(false);
         PlayerPrefs.SetString("Lang Set", "Yes");
     }
 
-    public void openPannel()
+    public void OpenPannel()
     {
         pannel.SetActive(true);
     }

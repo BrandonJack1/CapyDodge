@@ -41,22 +41,22 @@ public static IAPManager instance;
         return m_StoreController != null && m_StoreExtensionProvider != null;
     }
 
-    public void buyRemoveAds()
+    public void BuyRemoveAds()
     {
         Debug.Log("Purchase Button Pressed");
         BuyProductID(removeAds);
     }
 
-    public void buySmallCoins()
+    public void BuySmallCoins()
     {
         BuyProductID(smallCoins);
     }
-    public void buyMediumCoins()
+    public void BuyMediumCoins()
     {
         
         BuyProductID(mediumCoins);
     }
-    public void buyLargeCoins()
+    public void BuyLargeCoins()
     {
         
         BuyProductID(largeCoins);

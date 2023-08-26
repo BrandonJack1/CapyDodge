@@ -40,7 +40,7 @@ public class MainMenuPlayer : MonoBehaviour
     public Sprite seasonalGrass;
     public Sprite normalGrass;
 
-    public void enableSeasonal()
+    public void EnableSeasonal()
     {
         /*if (PlayerPrefs.GetString("Seasonal", "No") == "No")
         {
@@ -140,7 +140,7 @@ public class MainMenuPlayer : MonoBehaviour
        Time.timeScale = 1f;
         
        //show a random object with the player
-       randomObject();
+       RandomObject();
     }
 
     // Update is called once per frame
@@ -181,14 +181,14 @@ public class MainMenuPlayer : MonoBehaviour
             moveRight = false;
             currentCapy.transform.localScale = new Vector3(-0.8f, 0.8f, 1);
             currentCapy.transform.GetChild(objectEnaabled).gameObject.SetActive(false);
-            randomObject();
+            RandomObject();
         }
         else if (xPos < -13.5)
         {
             moveRight = true;
             currentCapy.transform.localScale = new Vector3(0.8f, 0.8f, 1);
             currentCapy.transform.GetChild(objectEnaabled).gameObject.SetActive(false);
-            randomObject();
+            RandomObject();
             
         }
         
@@ -196,7 +196,7 @@ public class MainMenuPlayer : MonoBehaviour
 
     }
 
-    void randomObject()
+    void RandomObject()
     {
         int rnd = Random.Range(0, 3);
 

@@ -20,7 +20,7 @@ public class Navigation : MonoBehaviour
         }
 
     }
-    public void play()
+    public void Play()
     {
         
         fader.gameObject.SetActive(true);
@@ -32,7 +32,7 @@ public class Navigation : MonoBehaviour
         });
     }
 
-    public void store()
+    public void Store()
     {
         fader.gameObject.SetActive(true);
         LeanTween.scale(fader, Vector3.zero, 0f);
@@ -43,7 +43,7 @@ public class Navigation : MonoBehaviour
         });
     }
 
-    public void menu()
+    public void Menu()
     {
         Time.timeScale = 1f;
         fader.gameObject.SetActive(true);
@@ -55,7 +55,7 @@ public class Navigation : MonoBehaviour
         });
     }
 
-    public void settings()
+    public void Settings()
     {
         fader.gameObject.SetActive(true);
         LeanTween.scale(fader, Vector3.zero, 0f);
@@ -66,12 +66,12 @@ public class Navigation : MonoBehaviour
         });
     }
     
-    public void showHighScores()
+    public void ShowHighScores()
     {
         Social.ShowLeaderboardUI();
     }
 
-    public void modes()
+    public void Modes()
     {
         fader.gameObject.SetActive(true);
         LeanTween.scale(fader, Vector3.zero, 0f);

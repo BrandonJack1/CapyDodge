@@ -16,20 +16,20 @@ public class screenSettings : MonoBehaviour
         
     }
 
-    public void enable120Hz()
+    public void Enable120Hz()
     {
 
         Application.targetFrameRate = 120;
 
     }
 
-    public void enable60Hz()
+    public void Enable60Hz()
     {
 
         Application.targetFrameRate = 60;
     }
 
-    public void enable30Hz()
+    public void Enable30Hz()
     {
 
         Application.targetFrameRate = 30;

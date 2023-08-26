@@ -180,7 +180,7 @@ public class Continue : MonoBehaviour
         }
     }
 
-    public void noThanks()
+    public void NoThanks()
     {
         //if the player does not want to continue, show game over screen
         SceneManager.LoadScene(3);

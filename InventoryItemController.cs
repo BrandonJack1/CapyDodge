@@ -14,12 +14,12 @@ public class InventoryItemController : MonoBehaviour
   public AudioClip invalid;
   public Item item;
   
-  public void addItem(Item newItem)
+  public void AddItem(Item newItem)
   {
       item = newItem;
   }
   
-  public void buy()
+  public void Buy()
   {
       //if its already purchased
     

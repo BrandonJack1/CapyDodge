@@ -65,7 +65,7 @@ public class SlowTime : MonoBehaviour
         }
     }
     
-    void spawnPowerUp()
+    void SpawnPowerUp()
     {
         
         

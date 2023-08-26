@@ -116,7 +116,7 @@ public class StoreNavigation : MonoBehaviour
     }
 
 
-    public void showInventory()
+    public void ShowInventory()
     {
         inventory.SetActive(true);
         store.SetActive(false);
@@ -182,7 +182,7 @@ public class StoreNavigation : MonoBehaviour
         }
     }
 
-    public void showSkinSets()
+    public void ShowSkinSets()
     {
         skinSets.SetActive(true);
         skins.SetActive(false);
@@ -194,7 +194,7 @@ public class StoreNavigation : MonoBehaviour
         
     }
     
-    public void showSkins()
+    public void ShowSkins()
     {
         skinSets.SetActive(false);
         skins.SetActive(true);
@@ -206,7 +206,7 @@ public class StoreNavigation : MonoBehaviour
         
     }
     
-    public void showAccessories()
+    public void ShowAccessories()
     {
         skinSets.SetActive(false);
         skins.SetActive(false);
@@ -218,7 +218,7 @@ public class StoreNavigation : MonoBehaviour
         
     }
 
-    public void showFeatured()
+    public void ShowFeatured()
     {
         
         //featured.SetActive(true);
@@ -226,13 +226,13 @@ public class StoreNavigation : MonoBehaviour
         store.SetActive(false);
     }
 
-    public void showCoins()
+    public void ShowCoins()
     {
         coinMenu.SetActive(true);
         
     }
 
-    public void closeCoins()
+    public void CloseCoins()
     {
         
         coinMenu.SetActive(false);

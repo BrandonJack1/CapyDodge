@@ -15,7 +15,7 @@ public class PromoCode : MonoBehaviour
     {
     }
 
-    public void enter()
+    public void Enter()
     {
         code = input.text;
         
@@ -33,12 +33,12 @@ public class PromoCode : MonoBehaviour
         }
     }
     
-    public void back()
+    public void Back()
     {
         panel.SetActive(false);
     }
 
-    public void open()
+    public void Open()
     {
         panel.SetActive(true);
         message.text = "";

@@ -81,23 +81,23 @@ public class InventoryManager : MonoBehaviour
         }
         accessoryContent.DetachChildren();
         
-        sortItems();
+        SortItems();
         
         //list each item thats in the store items grid
         
-        listInventoryItems(skinSets, skinSetContent);
-        listInventoryItems(skins, skinContent);
-        listInventoryItems(accessories, accessoryContent);
-        listStoreItems();
+        ListInventoryItems(skinSets, skinSetContent);
+        ListInventoryItems(skins, skinContent);
+        ListInventoryItems(accessories, accessoryContent);
+        ListStoreItems();
 
 
-        setStoreItems();
-        setInventoryItems(skins, skinContent, SkinItemController);
-        setInventoryItems(skinSets, skinSetContent, SkinSetItemController);
-        setInventoryItems(accessories, accessoryContent, AccessoryItemController);
+        SetStoreItems();
+        SetInventoryItems(skins, skinContent, SkinItemController);
+        SetInventoryItems(skinSets, skinSetContent, SkinSetItemController);
+        SetInventoryItems(accessories, accessoryContent, AccessoryItemController);
     }
 
-    public void listStoreItems()
+    private void ListStoreItems()
     {
         foreach (var item in storeItems)
         {
@@ -217,8 +217,8 @@ public class InventoryManager : MonoBehaviour
 
         }
     }
-    
-    public void listInventoryItems(List<Item> items, Transform transform)
+
+    private void ListInventoryItems(List<Item> items, Transform transform)
     {
         foreach (var item in items)
         {
@@ -476,28 +476,29 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-    public void setInventoryItems(List<Item> items, Transform content, InventoryItemController[] controllersList)
+
+    private static void SetInventoryItems(List<Item> items, Transform content, InventoryItemController[] controllersList)
     {
         controllersList = content.GetComponentsInChildren<InventoryItemController>();
         
         for (int i = 0; i < items.Count; i++)
         {
             
-            controllersList[i].addItem(items[i]);
+            controllersList[i].AddItem(items[i]);
         }
-    } 
-    
-    public void setStoreItems()
+    }
+
+    private void SetStoreItems()
     {
         storeItemsControllers = storeItemContent.GetComponentsInChildren<InventoryItemController>();
        
         for (int i = 0; i < storeItems.Count; i++)
         {
-            storeItemsControllers[i].addItem(storeItems[i]);
+            storeItemsControllers[i].AddItem(storeItems[i]);
         }
     }
 
-    public void sortItems()
+    private void SortItems()
     {
         skins.Clear();
         skinSets.Clear();

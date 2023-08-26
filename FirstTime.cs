@@ -49,7 +49,7 @@ public class FirstTime : MonoBehaviour
         }
     }
 
-    public void dismiss()
+    public void Dismiss()
     {
         //record that the player did the tutorial so it is not shown again
         PlayerPrefs.SetString("FirstTime", "No");

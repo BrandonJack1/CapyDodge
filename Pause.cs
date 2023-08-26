@@ -27,7 +27,7 @@ public class Pause : MonoBehaviour
     }
         
 
-    public void appleTVToggle()
+    public void AppleTVToggle()
     {
         if (paused == false)
         {
@@ -78,7 +78,7 @@ public class Pause : MonoBehaviour
         }
     }
     
-    public void pause()
+    public void PauseGame()
     {
         PlayerMovement.playerMove = false;
         source.PlayOneShot(pauseOn);
@@ -96,7 +96,7 @@ public class Pause : MonoBehaviour
         
     }
 
-    public void resume()
+    public void Resume()
     {
         PlayerMovement.playerMove = true;
         source.PlayOneShot(pauseOff);

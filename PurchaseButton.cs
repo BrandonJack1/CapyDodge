@@ -10,12 +10,12 @@ public class PurchaseButton : MonoBehaviour
     public PurchaseType purchaseType;
 
 
-    public void clickPurchaseButton()
+    public void ClickPurchaseButton()
     {
         switch (purchaseType)
         {
             case PurchaseType.removeAds:
-                IAPManager.instance.buyRemoveAds();
+                IAPManager.instance.BuyRemoveAds();
                 break;
             
         }
