@@ -49,47 +49,58 @@ public class InventoryItemController : MonoBehaviour
         //if the player clicks on an owned item and it is a skin set and currently equipped
         else if (item.skinSet && PlayerPrefs.GetString("Active Player Skin Set") == item.itemName)
         {
+            //set the time as not equipped
             PlayerPrefs.SetString("Player " + item.itemName, "Not Equipped");
+            //remove it from the active skin set variable
             PlayerPrefs.SetString("Active Player Skin Set", "");
             PlayerPrefs.SetString("Active Skin Set", "");
         }
         //if the player clicks on an owned item and it is a skin and currently equipped
         else if (item.skin && PlayerPrefs.GetString("Active Player Skin") == item.itemName)
         {
+            //set the time as not equipped
             PlayerPrefs.SetString("Player " + item.itemName, "Not Equipped");
+            //remove it from the active skin variable
             PlayerPrefs.SetString("Active Player Skin", "");
             PlayerPrefs.SetString("Active Skin", "");
         }
         //if the player clicks on an owned item and it is an accessory and currently equipped
         else if (item.accessory && PlayerPrefs.GetString("Active Player Accessory") == item.itemName)
         {
+            //set the time as not equipped
             PlayerPrefs.SetString("Player " + item.itemName, "Not Equipped");
+            //remove it from the active skin variable
             PlayerPrefs.SetString("Active Player Accessory", "");
             PlayerPrefs.SetString("Active Accessory", "");
         }
         //if the player clicks on a owned item that is a skin set and not equipped
         else if (item.skinSet)
         {
-            PlayerPrefs.SetString("Active Player Skin Set", item.itemName);
+            //set the time as equipped
             PlayerPrefs.SetString("Player " + item.itemName, "Equipped");
+            //Set it as the active skin variable
+            PlayerPrefs.SetString("Active Player Skin Set", item.itemName);
             PlayerPrefs.SetString("Active Player Accessory", "");
             PlayerPrefs.SetString("Active Player Skin", "");
         }
         //if the player clicks on a owned item that is a skin and not equipped
         else if (item.skin)
         {
-            PlayerPrefs.SetString("Active Player Skin", item.itemName);
+            //set the time as equipped
             PlayerPrefs.SetString("Player " + item.itemName, "Equipped");
+            //Set it as the active skin variable
+            PlayerPrefs.SetString("Active Player Skin", item.itemName);
             PlayerPrefs.SetString("Active Player Skin Set", "");
         }
         //if the player clicks on a owned item that is a accessory and not equipped
         else if (item.accessory)
         {
-            PlayerPrefs.SetString("Active Player Accessory", item.itemName);
+            //set the time as equipped
             PlayerPrefs.SetString("Player " + item.itemName, "Equipped");
+            //Set it as the active skin variable
+            PlayerPrefs.SetString("Active Player Accessory", item.itemName);
             PlayerPrefs.SetString("Active Player Skin Set", "");
         }
-        
         InventoryManager.instance.ListItems();
     }
 }
