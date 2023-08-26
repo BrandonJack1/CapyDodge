@@ -21,7 +21,7 @@ public class PromoCode : MonoBehaviour
         
         if(code == "COINS")
         {
-            Coins.addCoins(1000);
+            Coins.AddCoins(1000);
         }
         else if (code == "RESET")
         {

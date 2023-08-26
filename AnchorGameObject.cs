@@ -35,7 +35,6 @@ public class AnchorGameObject : MonoBehaviour
     /// </summary>
     IEnumerator UpdateAnchorAsync()
     {
-
         uint cameraWaitCycles = 0;
 
         while (CameraViewportHandler.Instance == null)
@@ -52,7 +51,6 @@ public class AnchorGameObject : MonoBehaviour
 
         UpdateAnchor();
         updateAnchorRoutine = null;
-
     }
 
     void UpdateAnchor()

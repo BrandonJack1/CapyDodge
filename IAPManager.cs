@@ -75,17 +75,17 @@ public static IAPManager instance;
         else if (String.Equals(args.purchasedProduct.definition.id, smallCoins, StringComparison.Ordinal))
         {
             source.PlayOneShot(purchaseSound);
-            Coins.addCoins(1000);
+            Coins.AddCoins(1000);
         }
         else if (String.Equals(args.purchasedProduct.definition.id, mediumCoins, StringComparison.Ordinal))
         {
             source.PlayOneShot(purchaseSound);
-            Coins.addCoins(5000);
+            Coins.AddCoins(5000);
         }
         else if (String.Equals(args.purchasedProduct.definition.id, largeCoins, StringComparison.Ordinal))
         {
             source.PlayOneShot(purchaseSound);
-            Coins.addCoins(10000);
+            Coins.AddCoins(10000);
         }
         {
             Debug.Log("Purchase Failed");

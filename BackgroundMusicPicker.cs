@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class BackgroundMusicPicker : MonoBehaviour
 {
-    public AudioSource source;
-
-    public AudioClip one;
-    public AudioClip two;
-    public AudioClip three;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip one;
+    [SerializeField] private AudioClip two;
+    [SerializeField] private AudioClip three;
+    
     // Start is called before the first frame update
     void Start()
     {
+        //get random int to pick background audio
         int rnd = Random.Range(0, 3);
 
         if (rnd == 0)
@@ -19,11 +20,9 @@ public class BackgroundMusicPicker : MonoBehaviour
             source.clip = one;
             source.Play();
             source.loop = true;
-
         }
         else if (rnd == 1)
         {
-
             source.clip = two;
             source.Play();
             source.loop = true;
@@ -34,6 +33,5 @@ public class BackgroundMusicPicker : MonoBehaviour
             source.Play();
             source.loop = true;
         }
-
     }
 }

@@ -6,10 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class BackgroundPicker : MonoBehaviour
 {
-    public GameObject background;
-
-    public Sprite bg1;
-    public Sprite bg2;
+    [SerializeField] private GameObject background;
+    [SerializeField] private Sprite bg1;
+    [SerializeField] private Sprite bg2;
     
     public static int activeBG;
     
@@ -17,11 +16,11 @@ public class BackgroundPicker : MonoBehaviour
     void Start()
     {
         int scene = SceneManager.GetActiveScene().buildIndex;
-
+        
+        //if its the menu or game, choose a random background
         if (scene == 1 || scene == 2)
         {
             int bg = Random.Range(0, 2);
-
             if (bg == 0)
             {
                 background.GetComponent<SpriteRenderer>().sprite = bg1;
@@ -31,9 +30,9 @@ public class BackgroundPicker : MonoBehaviour
             {
                 background.GetComponent<SpriteRenderer>().sprite = bg2;
                 activeBG = 2;
-
             }
         }
+        //if its not the menu or game, choose the background that was previously used so it matches the previous screen
         else
         {
             if (activeBG == 1)

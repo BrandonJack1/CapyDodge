@@ -5,12 +5,11 @@ using UnityEngine.EventSystems;
 
 public class FirstTime : MonoBehaviour
 {
-    public GameObject howTo;
-    public GameObject controls;
-    public GameObject appleTVControls;
-
-    public GameObject howToBtn;
-    public GameObject controlsBtn;
+    [SerializeField] private GameObject howTo;
+    [SerializeField] private GameObject controls;
+    [SerializeField] private GameObject appleTVControls;
+    [SerializeField] private GameObject howToBtn;
+    [SerializeField] private GameObject controlsBtn;
     
     void Start()
     {
@@ -19,25 +18,23 @@ public class FirstTime : MonoBehaviour
         {
             howTo.gameObject.SetActive(true);
             
-            
-            //Used for Apple TV
-
+            //Show Apple TV how to play
             if (Application.platform == RuntimePlatform.tvOS)
             {
-                
                 var eventSystem = EventSystem.current;
                 eventSystem.SetSelectedGameObject(howToBtn, new BaseEventData(eventSystem));
             }
             
+            //freeze time of the game
             Time.timeScale = 0f;
         }
     }
-    public void next()
+    public void Next()
     {
-        //used for Apple TV
-
+        //Method shows the next portion of the tutorial screen
         if (Application.platform == RuntimePlatform.tvOS)
         {
+            //hide previous screen and show next
             howTo.gameObject.SetActive(false);
             appleTVControls.gameObject.SetActive(true);
 
@@ -46,27 +43,27 @@ public class FirstTime : MonoBehaviour
         }
         else
         {
+            //hide previous screen and show next
             howTo.gameObject.SetActive(false);
             controls.gameObject.SetActive(true);
         }
-
-
     }
 
     public void dismiss()
     {
+        //record that the player did the tutorial so it is not shown again
         PlayerPrefs.SetString("FirstTime", "No");
 
         if (Application.platform == RuntimePlatform.tvOS)
         {
             appleTVControls.gameObject.SetActive(false);
-            
         }
         else
         {
             controls.gameObject.SetActive(false);
         }
         
+        //resume time
         Time.timeScale = 1f;
     }
 }

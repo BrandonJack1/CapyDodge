@@ -5,15 +5,13 @@ using UnityEngine.Audio;
 
 public class Audio : MonoBehaviour
 {
-
-    public AudioMixer soundMixer;
+    [SerializeField] private AudioMixer soundMixer;
     
     // Update is called once per frame
     void Update()
     {
         if (PlayerPrefs.GetString("Sound", "On") == "On")
         {
-            
             soundMixer.SetFloat("soundVolume", 1);
         }
         else if (PlayerPrefs.GetString("Sound", "On") == "Off")
