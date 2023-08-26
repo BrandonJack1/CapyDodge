@@ -9,65 +9,56 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 
 public class GameOver : MonoBehaviour
 {
-
     [SerializeField] private GameObject floatingScore;
-    public GameObject continueScreen;
-    public GameObject pauseButton;
+    [SerializeField] private GameObject continueScreen;
+    [SerializeField] private GameObject pauseButton;
+    [SerializeField] private GameObject continueBtn;
+    [SerializeField] private GameObject comboText;
+    [SerializeField] private GameObject previousComboText;
+    [SerializeField] private GameObject empty;
+    [SerializeField] private GameObject slowRemaining;
     
-    public float secondsToDestroy = 0.8f;
+    private const float SECONDS_TO_DESTROY = 0.8f;
     public static bool continueUsed = false;
 
     public AudioSource musicSource;
-    public AudioSource Source;
-    public AudioClip acornCollect;
-    public Canvas canvas;
+    [FormerlySerializedAs("Source")] public AudioSource source;
+    [SerializeField] private AudioClip acornCollect;
+    [SerializeField] private Canvas canvas;
 
-    public AudioClip acornCollect1;
-    public AudioClip acornCollect2;
-    public AudioClip acornCollect3;
-    public AudioClip acornCollect4;
-    public AudioClip acornCollect5;
-    public AudioClip acornCollect6;
-    public AudioClip acornCollect7;
-    public AudioClip acornCollect8;
-    public AudioClip acornCollect9;
+    [SerializeField] private AudioClip acornCollect1;
+    [SerializeField] private AudioClip acornCollect2;
+    [SerializeField] private AudioClip acornCollect3;
+    [SerializeField] private AudioClip acornCollect4;
+    [SerializeField] private AudioClip acornCollect5;
+    [SerializeField] private AudioClip acornCollect6;
+    [SerializeField] private AudioClip acornCollect7;
+    [SerializeField] private AudioClip acornCollect8;
+    [SerializeField] private AudioClip acornCollect9;
+    [SerializeField] private AudioClip goldenAcornCollect;
+    [SerializeField] private AudioClip acronHit;
+    [SerializeField] private AudioClip starSound;
+    [SerializeField] private AudioClip coins;
+    [SerializeField] private AudioClip clock;
     
+    private int activeScene;
     
-    public AudioClip goldenAcornCollect;
-    public AudioClip acronHit;
-    public AudioClip starSound;
-    public AudioClip coins;
-    
-    public AudioClip clock;
-    public bool clockSoundActive = false;
-
-    public int activeScene;
-
     public static Stopwatch timer;
-
-    public GameObject slowRemaining;
-
     public static bool soundActive;
+    private bool clockSoundActive = false;
     public static bool toggleSound;
     
-    public GameObject continueBtn;
-
-    public GameObject comboText;
-
-    public GameObject previousComboText;
-
-    public GameObject empty;
-    private Animator animator;
-
     void Start()
     {
-        animator = GetComponent<Animator>();
+        //used to offer the player a chance to continue
         continueUsed = false;
+        
         pauseButton.SetActive(true);
         activeScene = SceneManager.GetActiveScene().buildIndex;
         
@@ -80,50 +71,54 @@ public class GameOver : MonoBehaviour
 
         soundActive = true;
         toggleSound = true;
-
     }
 
     private void Update()
     {
         TimeSpan ts = timer.Elapsed;
-
+        
+        //Resume background music if the player continues 
         if (soundActive && toggleSound)
         {
             toggleSound = false;
-            Source.UnPause();
+            source.UnPause();
         }
+        
+        //pause the background music if the player loses
         if (soundActive == false && toggleSound)
         {
             toggleSound = false;
-            Source.Pause();
+            source.Pause();
         }
         
         //get the amount of seconds remainng for the power up
         slowRemaining.GetComponent<TextMeshProUGUI>().text = (10 - ts.Seconds).ToString();
-
+        
+        //play a countdown sound for the clock power up
         if (ts.Seconds >= 5 && clockSoundActive == false)
         {
             slowRemaining.SetActive(true);
             clockSoundActive = true;
-            Source.PlayOneShot(clock);
+            source.PlayOneShot(clock);
         }
-    
+        
+        //if the countdown for the clock power up runs out, reset everything
         if (ts.Seconds >= 10)
         {
             timer.Stop();
             timer.Reset();
-            
             Acorn.slowActive = false;
-
             clockSoundActive = false;
-
+            
+            //make acorns go back to normal speed
             var acorns = GameObject.FindGameObjectsWithTag("Acorn");
             foreach (var obj in acorns)
             {
                 obj.GetComponent<Rigidbody2D>().velocity /= new UnityEngine.Vector2(0.1f,0.1f);
                 obj.GetComponent<Rigidbody2D>().gravityScale =  1f;
             }
-
+            
+            //make golden acorns go back to normal speed
             var goldenAcorn = GameObject.FindGameObjectsWithTag("GoldenAcorn");
             foreach (var obj in goldenAcorn)
             {
@@ -132,7 +127,6 @@ public class GameOver : MonoBehaviour
             }
             
             SlowTime.timer.Start();
-
             SlowTime.active = false;
             
             //hide the countdown timer when the power up is done
@@ -142,26 +136,26 @@ public class GameOver : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Acorn") || col.CompareTag(("GiantAcorn")))
+        if (col.CompareTag("Acorn") || col.CompareTag(("GiantAcorn")) || col.CompareTag("GoldenAcorn"))
         {
             //if the power up isnt active then end the game
             if (!PowerUp.active)
             {
                 col.gameObject.tag = "Untagged";
                 
-                Source.Stop();
+                //stop sound and background music
+                source.Stop();
                 musicSource.Pause();
 
-                //if the continue is already used or the user removed the ads, skip to game over
-
+                //if the player already used continue then go to game over
                 if (continueUsed)
                 {
-                    StartCoroutine(gameOverAnimation(false,col.gameObject));
+                    StartCoroutine(GameOverAnimation(false,col.gameObject));
                 }
-                //offer the continue
+                //otherwise offer the continue
                 else
                 {
-                    StartCoroutine(gameOverAnimation(true, col.gameObject));
+                    StartCoroutine(GameOverAnimation(true, col.gameObject));
                 }
             }
             //if the power up is active
@@ -169,227 +163,144 @@ public class GameOver : MonoBehaviour
             {   
                 //get rid of acorn
                 Destroy(col.gameObject);
-
+                
+                //default points for normal acorn is 50
                 float points = 50;
+                
                 if (col.CompareTag("GiantAcorn"))
                 {
                     Acorn.giantActive = false;
                     points = 100;
                 }
-                
-                
-                
-                //Game mode 1
-                if (activeScene == 2)
+                else if (col.CompareTag("GoldenAcorn"))
                 {
-                    GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
-
-                    if (Combo.comboActive)
-                    {   
-                        //increase combo multiplier value
-                        Combo.multiplier += 0.25f;
-                        
-                        //add default acorn value * multiplier to the score 
-                        Score.score += (int)(points * Combo.multiplier);
-                        
-                        //spawn the acorn score value
-                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(points * Combo.multiplier)).ToString();
-                        prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
-                        Combo.comboTimer = 0.8f;
-                        
-                        //play the sound for the combo
-                        playComboSound();
-
-                        //delete the previous combo text to prevent overlap
-                        if (previousComboText != null)
-                        {
-                            Destroy(previousComboText);
-                        }
-                        
-                        //spawn combo value in center of the screen
-                        GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
-                        //set an empty parent so animation works
-                        comboUI.transform.SetParent(empty.transform, false);
-                        
-                        //set the color of the multiplier text
-                        
-                        Transform firstChild = comboUI.transform.GetChild(0);
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
-                        comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
-
-                        previousComboText = comboUI;
-                        float rndRotate = Random.Range(-10, 10);
-                        
-                        
-                        comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
-                        Destroy(comboUI, 1f);
-
-
-                        comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().text =
-                            comboUI.GetComponent<TextMeshProUGUI>().text;
-                        comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
-                        
-                        //instantiate combo UI
-                        //random rotation
-
-                    }
-                    else
-                    {
-                        Combo.comboActive = true;
-                        //increase score
-                        Score.score += 50;
-                        //spawn a floating number
-                        prefab.GetComponentInChildren<TextMesh>().text = "50";
-                        Source.PlayOneShot(acornCollect);
-                    }
-                    Destroy(prefab, secondsToDestroy);
+                    Acorn.goldenActive = false;
+                    points = 200;
                 }
                 
-            }
+                GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
 
+                //if the player is currently in the middle of a combo when collecting this acorn
+                if (Combo.comboActive)
+                {   
+                    //increase combo multiplier value
+                    Combo.multiplier += 0.25f;
+                    
+                    //add default acorn value * multiplier to the score 
+                    Score.score += (int)(points * Combo.multiplier);
+                    
+                    //spawn the acorn score value
+                    prefab.GetComponentInChildren<TextMesh>().text = ((int)(points * Combo.multiplier)).ToString();
+                    prefab.GetComponentInChildren<TextMesh>().color = ComboColor(Combo.multiplier, false);
+                    Combo.comboTimer = 0.8f;
+                    
+                    //play the sound for the combo
+                    PlayComboSound();
+
+                    //delete the previous combo text to prevent overlap
+                    if (previousComboText != null)
+                    {
+                        Destroy(previousComboText);
+                    }
+                    
+                    //spawn combo value in center of the screen
+                    GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
+                    
+                    //set an empty parent so animation works
+                    comboUI.transform.SetParent(empty.transform, false);
+                    
+                    //set the color of the multiplier text
+                    Transform firstChild = comboUI.transform.GetChild(0);
+                    firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = ComboColor(Combo.multiplier, true);
+                    comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
+                    
+                    //set this text as previous so it can be deleted if the player performs another combo (to prevent overlap)
+                    previousComboText = comboUI;
+                    float rndRotate = Random.Range(-10, 10);
+                    
+                    //randomly rotate the combo ui in different directions
+                    comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
+                    
+                    //destroy it after 1 second
+                    Destroy(comboUI, 1f);
+                    
+                    //instantiate the combo with the amount and play the animation
+                    comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
+                    firstChild.GameObject().GetComponent<TextMeshProUGUI>().text =
+                        comboUI.GetComponent<TextMeshProUGUI>().text;
+                    
+                    comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
+                }
+                else
+                {
+                    //set the combo as active 
+                    Combo.comboActive = true;
+                    
+                    //increase score
+                    Score.score += (int)points;
+                    
+                    //spawn a floating number
+                    prefab.GetComponentInChildren<TextMesh>().text = points.ToString();
+                    source.PlayOneShot(acornCollect);
+                }
+                Destroy(prefab, SECONDS_TO_DESTROY);
+            }
         }
         else if (col.CompareTag("Star"))
         {
+            //destroy the star
             Destroy(col.gameObject);
+            
+            //add 150 to the score
             Score.score += 150;
-
+            
+            //instantiate floating score
             GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
             prefab.GetComponentInChildren<TextMesh>().text = "150";
             
             //power up sound
-            Source.PlayOneShot(starSound);
+            source.PlayOneShot(starSound);
             
-            Destroy(prefab, secondsToDestroy);
-
+            //destroy the floating score
+            Destroy(prefab, SECONDS_TO_DESTROY);
+            
             Apple.starActive = false;
-
         }
         else if (col.CompareTag("Clock"))
         {
-
             SlowTime.inArea = false;
             SlowTime.active = true;
+            
+            //find all active acorns in play area
             var acorns = GameObject.FindGameObjectsWithTag("Acorn");
             var goldenAcorns = GameObject.FindGameObjectsWithTag("GoldenAcorn");
             
-            //slowRemaining.SetActive(true);
-            
             Acorn.slowActive = true;
+            source.PlayOneShot(starSound);
             
-            Source.PlayOneShot(starSound);
-            
+            //destroy clock
             Destroy(col.gameObject);
             
+            //slowdown all acorns in the game area
             foreach (var obj in acorns)
             {
-                //obj.GetComponent<Rigidbody2D>().velocity *= new UnityEngine.Vector2(0.1f,0.1f);
-                //obj.GetComponent<Rigidbody2D>().gravityScale =  0.01f;
-                
                 obj.GetComponent<Rigidbody2D>().velocity *= new UnityEngine.Vector2(0.1f,0.1f);
                 obj.GetComponent<Rigidbody2D>().gravityScale =  0.01f;
             }
-
+            
+            //slowdown all golden acorns in the game area
             foreach (var obj in goldenAcorns)
             {
                 obj.GetComponent<Rigidbody2D>().velocity *= new UnityEngine.Vector2(0.1f,0.1f);
                 obj.GetComponent<Rigidbody2D>().gravityScale =  0.01f;
             }
-
+            
             SlowTime.offset += 15;
             timer.Start();
         }
-        //if the tag of the object is GoldenAcorn
-        if (col.CompareTag("GoldenAcorn"))
-        {
-            Acorn.goldenActive = false;
-            //if golden acorn collides with player and power up is not active, end the game
-            if (PowerUp.active == false)
-            {
-                col.gameObject.tag = "Untagged";
-                
-                Source.Stop();
-                musicSource.Pause();
-
-                //if the continue is already used or the user removed the ads, skip to game over
-
-                if (continueUsed)
-                {
-                    StartCoroutine(gameOverAnimation(false,col.gameObject));
-                }
-                //offer the continue
-                else
-                {
-                    StartCoroutine(gameOverAnimation(true, col.gameObject));
-                }
-                
-            }
-            //if power up is active
-            else
-            {
-                //get rid of acorn
-                Destroy(col.gameObject);
-
-                if (activeScene == 2)
-                {
-                    GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
-
-                    if (Combo.comboActive)
-                    {
-                        Combo.multiplier += 0.25f;
-                        Score.score += (int)(200 * Combo.multiplier);
-                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(200 * Combo.multiplier)).ToString();
-                        prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
-                        Combo.comboTimer = 0.8f;
-                        playComboSound();
-                        
-                        //delete the previous one to prevent overlap
-                        if (previousComboText != null)
-                        {
-                            Destroy(previousComboText);
-                        }
-
-                        GameObject comboUI = Instantiate(comboText, new Vector3(0.7f, -23f,-0.1f), quaternion.identity );
-                        comboUI.transform.SetParent(empty.transform, false);
-                        comboUI.GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
-
-                        previousComboText = comboUI;
-                        float rndRotate = Random.Range(-10, 10);
-                        
-                        Transform firstChild = comboUI.transform.GetChild(0);
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().color = comboColor(Combo.multiplier, true);
-                        comboUI.transform.Rotate(0, 0, rndRotate, Space.Self);
-                        Destroy(comboUI, 0.8f);
-                        
-                        comboUI.GetComponent<TextMeshProUGUI>().text = "x" + Combo.multiplier;
-                        firstChild.GameObject().GetComponent<TextMeshProUGUI>().text =
-                            comboUI.GetComponent<TextMeshProUGUI>().text;
-                        
-                        comboUI.GetComponent<TextMeshProUGUI>().color = Color.white;
-                        comboUI.GetComponent<Animator>().SetTrigger("ComboTrigger");
-                        //instantiate combo UI
-                        //random rotation
-
-                    }
-                    else
-                    {
-                        Combo.comboActive = true;
-                        //increase score
-                        Score.score += 200;
-                        //spawn a floating number
-                        prefab.GetComponentInChildren<TextMesh>().text = "200";
-                        Source.PlayOneShot(acornCollect);
-                    }
-                    Destroy(prefab, secondsToDestroy);
-                }
-                
-                Source.PlayOneShot(goldenAcornCollect);
-                
-            }
-        }
     }
-    
-    IEnumerator gameOverAnimation(bool offerContinue, GameObject col)
+
+    private IEnumerator GameOverAnimation(bool offerContinue, GameObject col)
     {
         //hide the pause button
         pauseButton.SetActive(false);
@@ -401,7 +312,7 @@ public class GameOver : MonoBehaviour
 
         //dont allow the player to move
         PlayerMovement.playerMove = false;
-        Source.PlayOneShot(acronHit);
+        source.PlayOneShot(acronHit);
         
         //delay time for sound to play
         yield return new WaitForSecondsRealtime(2f);
@@ -412,9 +323,13 @@ public class GameOver : MonoBehaviour
         //if the user is eligble for a continue
         if (offerContinue)
         {
+            //freeze time
             Time.timeScale = 0f;
+            
+            //show continue screen
             continueScreen.SetActive(true);
-
+            
+            //Apple TV set selection
             if (Application.platform == RuntimePlatform.tvOS)
             {
                 var eventSystem = EventSystem.current;
@@ -422,54 +337,58 @@ public class GameOver : MonoBehaviour
             }
             
         }
+        //if player already used continue then bring them to game over screen
         else
         {
+            //freeze time
             Time.timeScale = 0f;
+            
+            //load game over scene
             SceneManager.LoadScene(3);
             
         }
     }
 
-    public void playComboSound()
-    {
+    private void PlayComboSound()
+    {   
+        //play pitched sound depending on the multiplier active
         switch (Combo.multiplier)
         {
             case 1.25f:
-                Source.PlayOneShot(acornCollect1);
+                source.PlayOneShot(acornCollect1);
                 break;
             case 1.5f:
-                Source.PlayOneShot(acornCollect2);
+                source.PlayOneShot(acornCollect2);
                 break;
             case 1.75f:
-                Source.PlayOneShot(acornCollect3);
+                source.PlayOneShot(acornCollect3);
                 break;
             case 2f:
-                Source.PlayOneShot(acornCollect4);
+                source.PlayOneShot(acornCollect4);
                 break;
             case 2.25f:
-                Source.PlayOneShot(acornCollect5);
+                source.PlayOneShot(acornCollect5);
                 break;
             case 2.5f:
-                Source.PlayOneShot(acornCollect6);
+                source.PlayOneShot(acornCollect6);
                 break;
             case 2.75f:
-                Source.PlayOneShot(acornCollect7);
+                source.PlayOneShot(acornCollect7);
                 break;
             case 3f:
-                Source.PlayOneShot(acornCollect8);
+                source.PlayOneShot(acornCollect8);
                 break;
             case 3.25f:
-                Source.PlayOneShot(acornCollect9);
+                source.PlayOneShot(acornCollect9);
                 break;
             default:
-                Source.PlayOneShot(acornCollect9);
+                source.PlayOneShot(acornCollect9);
                 break;
         }
     }
-    
-    public Color comboColor(float multiplier, bool largeText)
-    {
 
+    private Color ComboColor(float multiplier, bool largeText)
+    {
         byte transparency;
         if (largeText)
         {
@@ -479,7 +398,8 @@ public class GameOver : MonoBehaviour
         {
             transparency = 255;
         }
-
+        
+        //get color for multiplier depending on the multiplier value
         Color returnColor;
         switch (multiplier)
         {
@@ -514,8 +434,6 @@ public class GameOver : MonoBehaviour
                 returnColor = new Color32(0,209,18,200);
                 break;
         }
-
         return returnColor;
-
     }
 }
