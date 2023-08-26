@@ -18,20 +18,16 @@ public class BackgroundMusicPicker : MonoBehaviour
         if (rnd == 0)
         {
             source.clip = one;
-            source.Play();
-            source.loop = true;
         }
         else if (rnd == 1)
         {
             source.clip = two;
-            source.Play();
-            source.loop = true;
         }
         else if (rnd == 2)
         {
             source.clip = three;
-            source.Play();
-            source.loop = true;
         }
+        source.Play();
+        source.loop = true;
     }
 }
