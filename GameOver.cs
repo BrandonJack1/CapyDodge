@@ -171,10 +171,14 @@ public class GameOver : MonoBehaviour
                 //get rid of acorn
                 Destroy(col.gameObject);
 
+                float points = 50;
                 if (col.CompareTag("GiantAcorn"))
                 {
                     Acorn.giantActive = false;
+                    points = 100;
                 }
+                
+                
                 
                 //Game mode 1
                 if (activeScene == 2)
@@ -187,10 +191,10 @@ public class GameOver : MonoBehaviour
                         Combo.multiplier += 0.25f;
                         
                         //add default acorn value * multiplier to the score 
-                        Score.score += (int)(50 * Combo.multiplier);
+                        Score.score += (int)(points * Combo.multiplier);
                         
                         //spawn the acorn score value
-                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(50 * Combo.multiplier)).ToString();
+                        prefab.GetComponentInChildren<TextMesh>().text = ((int)(points * Combo.multiplier)).ToString();
                         prefab.GetComponentInChildren<TextMesh>().color = comboColor(Combo.multiplier, false);
                         Combo.comboTimer = 0.8f;
                         
@@ -249,10 +253,10 @@ public class GameOver : MonoBehaviour
         else if (col.CompareTag("Star"))
         {
             Destroy(col.gameObject);
-            Score.score += 100;
+            Score.score += 150;
 
             GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
-            prefab.GetComponentInChildren<TextMesh>().text = "100";
+            prefab.GetComponentInChildren<TextMesh>().text = "150";
             
             //power up sound
             Source.PlayOneShot(starSound);
