@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
 public class Acorn : MonoBehaviour
 {
     public GameObject acorn;
@@ -13,42 +12,36 @@ public class Acorn : MonoBehaviour
     
     public static bool goldenActive = false;
     public static bool giantActive = false;
-    public static float spawnRate = 4f;
-    public float leftOffset;
-    public float rightOffset;
-    
-    public bool speed1 = false;
-    public bool speed2 = false;
-    public bool speed3 = false;
-    public bool speed4 = false;
-    public bool speed5 = false;
-    public bool speed6 = false;
-    public bool speed7 = false;
-    public bool speed8 = false;
-    public bool speed9 = false; 
-    public bool speed10 = false;
-    
-    public AudioSource source;
-    public AudioClip leaves;
-    public AudioClip speedingUp;
-    
-    private ParticleSystem particles;
-    public Camera mainCamera;
-    
-    public Sprite easterEgg1;
-    public Sprite easterEgg2;
-    public Sprite easterEgg3;
+    private static float spawnRate = 4f;
+    private float leftOffset;
+    private float rightOffset;
 
-    public static bool slowActive;
+    private bool speed1 = false;
+    private bool speed2 = false;
+    private bool speed3 = false;
+    private bool speed4 = false;
+    private bool speed5 = false;
+    private bool speed6 = false;
+    private bool speed7 = false;
+    private bool speed8 = false;
+    private bool speed9 = false; 
+    private bool speed10 = false;
     
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip leaves;
+    [SerializeField] private AudioClip speedingUp;
+
+    private ParticleSystem particles;
+    [SerializeField] Camera mainCamera;
+    public static bool slowActive;
+
     void Start()
     {
         //starting spawn rate for acorns
         spawnRate = 4f;
         
         //spawn acorns in relation to the spawn rate
-        InvokeRepeating("SpawnAcorn", 1, spawnRate);
-
+        InvokeRepeating("spawnAcorn", 1, spawnRate);
         goldenActive = false;
         giantActive = false;
         
@@ -58,14 +51,12 @@ public class Acorn : MonoBehaviour
         
         //particle system for the leaves
         particles = particle.GetComponent<ParticleSystem>();
-
         spawnRate = 4f;
     }
-
     // Update is called once per frame
     void Update()
     {
-        //adjust the spawn speed when a score is reached
+        //adjust the spawn speed
         if (Score.score >= 750 && speed1 == false)
         {
             increaseSpeed(1,3.5f);
@@ -115,8 +106,6 @@ public class Acorn : MonoBehaviour
         //play the sound 
         source.PlayOneShot(speedingUp);
         StartCoroutine(DisableText());
-        
-        //increase the speed
         switch (speed)
         {
             case 1:
@@ -155,26 +144,23 @@ public class Acorn : MonoBehaviour
         //stop the previous invoke for the previous spawn rate
         CancelInvoke();
         spawnRate = rate;
-        InvokeRepeating("SpawnAcorn", 1, spawnRate);
+        InvokeRepeating("spawnAcorn", 1, spawnRate);
     }
-
-    public void SpawnAcorn()
+    public void spawnAcorn()
     {
         //only spawn acorns when the slow time isnt active
         if (SlowTime.active == false)
         {
-            //get a random value to spawn the acorn which is within device dimensions and play area
+            //get a random value to spawn the acorn
             float pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x,
                 mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
-
             //spawn and play the leaf animation
             particle.transform.position = new Vector3(pos, 4.5f, 0);
             particles.Play();
-
             //disable the leave after an amount of time
             source.PlayOneShot(leaves);
             
-            //1 in 30 chance of spawning one of the different acorns (giant and golden)
+            //1 in 10 chance of the golden acorn spawning
             int spawnDiffAcorn = Random.Range(1, 30);
             
             //If chance happens, spawn the golden acorn, otherwise spawn regular acorn
@@ -185,43 +171,54 @@ public class Acorn : MonoBehaviour
             if (spawnDiffAcorn == 5 && goldenActive == false)
             {
                 goldenActive = true;
-                //spawn the golden acorn
-                acornClone =
-                    Object.Instantiate<GameObject>(goldenAcorn, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-                rb = acornClone.GetComponent<Rigidbody2D>();
-                acornClone.transform.localScale = new Vector3(PlayerSize.ACORN_WIDTH, PlayerSize.ACORN_HEIGHT, 0.73f);
+                InstantiateAcorns(pos, "Golden");
             }
             else if (spawnDiffAcorn is 10 or 20 && giantActive == false && !UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
             {
                 giantActive = true;
-                acornClone =
-                    Object.Instantiate<GameObject>(giantAcorn, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-                rb = acornClone.GetComponent<Rigidbody2D>();
-                acornClone.transform.localScale = new Vector3(PlayerSize.GIANT_ACORN_WIDTH, PlayerSize.GIANT_ACORN_HEIGHT, 0.73f);
+                InstantiateAcorns(pos, "Giant");
             }
             else
             {
-                //Spawn a normal acorn
-                acornClone =
-                    Object.Instantiate<GameObject>(acorn, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-                rb = acornClone.GetComponent<Rigidbody2D>();
-                acornClone.transform.localScale = new Vector3(PlayerSize.ACORN_WIDTH, PlayerSize.ACORN_HEIGHT, 0.73f);
+                InstantiateAcorns(pos, "Normal");
             }
-            
-            //add bounce to the acorn
-            rb.AddTorque(-0.3f, ForceMode2D.Force);
-
-            //create random forces for the acorns when spawning in 
-            float xForce = Random.Range(-30, 30);
-            xForce = xForce / 10;
-            float yForce = Random.Range(-30, 30);
-            yForce = yForce / 10;
-
-            //add the force
-            rb.AddForce(new Vector2(xForce, yForce), ForceMode2D.Impulse);
         }
     }
-
+    
+    public void InstantiateAcorns(float pos, string type)
+    {
+        GameObject acornType;
+        GameObject acornClone;
+        Rigidbody2D rb;
+        switch (type)
+        {
+            case "Golden":
+                acornType = goldenAcorn;
+                break;
+            case "Giant":
+                acornType = giantAcorn;
+                break;
+            default:
+                acornType = acorn;
+                break;
+        }
+        acornClone =
+            Object.Instantiate<GameObject>(acornType, new Vector3(pos, 5.5f, 0), Quaternion.identity);
+        rb = acornClone.GetComponent<Rigidbody2D>();
+        
+        //set the proper size for the acorn
+        acornClone.transform.localScale = type == "Giant" ? new Vector3(PlayerSize.GIANT_ACORN_WIDTH, PlayerSize.GIANT_ACORN_HEIGHT, 0.73f) : new Vector3(PlayerSize.ACORN_WIDTH, PlayerSize.ACORN_HEIGHT, 0.73f);
+        
+        //add bounce to the acorn
+        rb.AddTorque(-0.3f, ForceMode2D.Force);
+        //create random forces for the acorns when spawning in 
+        float xForce = Random.Range(-30, 30);
+        xForce = xForce / 10;
+        float yForce = Random.Range(-30, 30);
+        yForce = yForce / 10;
+        //add the force
+        rb.AddForce(new Vector2(xForce, yForce), ForceMode2D.Impulse);
+    }
     IEnumerator DisableText()
     {
         //hide the speed text after 4 seconds
