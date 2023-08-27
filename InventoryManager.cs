@@ -39,6 +39,7 @@ public class InventoryManager : MonoBehaviour
     
     public void Start()
     {
+        //set the language
         lang = PlayerPrefs.GetInt("Lang Pref");
         ListItems();
     }
@@ -60,6 +61,7 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(item.GameObject());
         }
+        
         skinSetContent.DetachChildren();
         
         //reset reach of the grids
@@ -79,13 +81,14 @@ public class InventoryManager : MonoBehaviour
         SortItems();
         
         //list each item thats in the store items grid
-        
         ListInventoryItems(skinSets, skinSetContent);
         ListInventoryItems(skins, skinContent);
         ListInventoryItems(accessories, accessoryContent);
         ListStoreItems();
         
         SetStoreItems();
+        
+        //assign items to their respective controllers
         SetInventoryItems(skins, skinContent, skinItemController);
         SetInventoryItems(skinSets, skinSetContent, skinSetItemController);
         SetInventoryItems(accessories, accessoryContent, accessoryItemController);
@@ -96,7 +99,8 @@ public class InventoryManager : MonoBehaviour
         foreach (var item in storeItems)
         {
             GameObject obj = Instantiate(inventoryItem, storeItemContent);
-
+            
+            //set each variable for the item
             var itemPrice = obj.transform.Find("Price").GetComponent<TextMeshProUGUI>();
             var itemIcon = obj.transform.Find("ItemIcon").GetComponent<Image>();
             itemPrice.text = item.price.ToString();
@@ -106,110 +110,20 @@ public class InventoryManager : MonoBehaviour
             var label = obj.transform.Find("Buy Button").transform.Find("Label").GetComponent<TextMeshProUGUI>();
             var type = obj.transform.Find("Type").GetComponent<TextMeshProUGUI>();
             
-            
-            switch (lang)
-            {
-                //English
-                case 0:
-                    label.text = "Buy";
-                    break;
-                //French
-                case 1:
-                    label.text = "Acheter";
-                    break;
-                //Spanish
-                case 2:
-                    label.text = "Comprar";
-                    break;
-                //German
-                case 3:
-                    label.text = "Kaufen";
-                    break;
-                //Portagese
-                case 4:
-                    label.text = "Comprar";
-                    break;
-            }
+           label.text = Translation("Buy");
             
             if (item.skinSet)
-            { 
-                switch (lang)
-                {
-                    //English
-                    case 0:
-                        type.text = "Skin Set";
-                        break;
-                    //French
-                    case 1:
-                        type.text = "Set de peau";
-                        break;
-                    //Spanish
-                    case 2:
-                        type.text = "Juego de pieles";
-                        break;
-                    //German
-                    case 3:
-                        type.text = "Skin-Set";
-                        break;
-                    //Portagese
-                    case 4:
-                        type.text = "Conjunto de pele";
-                        break;
-                }
+            {
+                type.text = Translation("Skin Set");
             }
             else if (item.skin)
             {
-                switch (lang)
-                {
-                    //English
-                    case 0:
-                        type.text = "Skin";
-                        break;
-                    //French
-                    case 1:
-                        type.text = "Peau";
-                        break;
-                    //Spanish
-                    case 2:
-                        type.text = "Piel";
-                        break;
-                    //German
-                    case 3:
-                        type.text = "Haut";
-                        break;
-                    //Portagese
-                    case 4:
-                        type.text = "Pele";
-                        break;
-                }
+                type.text = Translation("Skin");
             }
             else if (item.accessory)
             {
-                switch (lang)
-                {
-                    //English
-                    case 0:
-                        type.text = "Accessory";
-                        break;
-                    //French
-                    case 1:
-                        type.text = "Accessoire";
-                        break;
-                    //Spanish
-                    case 2:
-                        type.text = "Accesorio";
-                        break;
-                    //German
-                    case 3:
-                        type.text = "Zubehor";
-                        break;
-                    //Portagese
-                    case 4:
-                        type.text = "Acessorio";
-                        break;
-                }
+                type.text = Translation("Accessory");
             }
-
         }
     }
 
@@ -217,6 +131,7 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (var item in items)
         {
+            //set each variable for the item
             GameObject obj = Instantiate(inventoryItem, transform);
             var itemPrice = obj.transform.Find("Price").GetComponent<TextMeshProUGUI>();
             var itemIcon = obj.transform.Find("ItemIcon").GetComponent<Image>();
@@ -225,260 +140,63 @@ public class InventoryManager : MonoBehaviour
             var type = obj.transform.Find("Type").GetComponent<TextMeshProUGUI>();
             
             var coin = obj.transform.Find("Price").transform.Find("Coin").GameObject();
+            
+            //remove the store aspects of the item for inventory use
             coin.SetActive(false);
             name.text = item.storeName;
             itemPrice.text = "";
             itemIcon.sprite = item.icon;
-
+            
+            //set type and equipped status labels
             if (item.skinSet)
             {
-                switch (lang)
-                {
-                    //English
-                    case 0:
-                        type.text = "Skin Set";
-                        break;
-                    //French
-                    case 1:
-                        type.text = "Set de peau";
-                        break;
-                    //Spanish
-                    case 2:
-                        type.text = "Juego de pieles";
-                        break;
-                    //German
-                    case 3:
-                        type.text = "Skin-Set";
-                        break;
-                    //Portagese
-                    case 4:
-                        type.text = "Conjunto de pele";
-                        break;
-                }
+                type.text = Translation("Skin Set");
                 
                 if (PlayerPrefs.GetString("Active Player Skin Set") == item.itemName)
                 {
-                    switch (lang)
-                    {
-                        //English
-                        case 0:
-                            label.text = "Equipped";
-                            break;
-                        //French
-                        case 1:
-                            label.text = "Equipe";
-                            break;
-                        //Spanish
-                        case 2:
-                            label.text = "Equipado";
-                            break;
-                        //German
-                        case 3:
-                            label.text = "Ausgestattet";
-                            break;
-                        //Portagese
-                        case 4:
-                            label.text = "Equipado";
-                            break;
-                    }
+                    label.text = Translation("Equipped");
                 }
                 else
                 {
-                    switch (lang)
-                    {
-                        //English
-                        case 0:
-                            label.text = "Equip";
-                            break;
-                        //French
-                        case 1:
-                            label.text = "Equiper";
-                            break;
-                        //Spanish
-                        case 2:
-                            label.text = "Equipar";
-                            break;
-                        //German
-                        case 3:
-                            label.text = "Ausstatten";
-                            break;
-                        //Portagese
-                        case 4:
-                            label.text = "Equipar";
-                            break;
-                    }
+                    label.text = Translation("Equip");
                 }
             }
             else if (item.skin)
             {
-                switch (lang)
-                {
-                    //English
-                    case 0:
-                        type.text = "Skin";
-                        break;
-                    //French
-                    case 1:
-                        type.text = "Peau";
-                        break;
-                    //Spanish
-                    case 2:
-                        type.text = "Piel";
-                        break;
-                    //German
-                    case 3:
-                        type.text = "Haut";
-                        break;
-                    //Portagese
-                    case 4:
-                        type.text = "Pele";
-                        break;
-                }
-                
+                type.text = Translation("Skin");
+
                 if (PlayerPrefs.GetString("Active Player Skin") == item.itemName)
                 {
-                    
-                    switch (lang)
-                    {
-                        //English
-                        case 0:
-                            label.text = "Equipped";
-                            break;
-                        //French
-                        case 1:
-                            label.text = "Equipe";
-                            break;
-                        //Spanish
-                        case 2:
-                            label.text = "Equipado";
-                            break;
-                        //German
-                        case 3:
-                            label.text = "Ausgestattet";
-                            break;
-                        //Portagese
-                        case 4:
-                            label.text = "Equipado";
-                            break;
-                    }
+                    label.text = Translation("Equipped");
                 }
                 else
                 {
-                    switch (lang)
-                    {
-                        //English
-                        case 0:
-                            label.text = "Equip";
-                            break;
-                        //French
-                        case 1:
-                            label.text = "Equiper";
-                            break;
-                        //Spanish
-                        case 2:
-                            label.text = "Equipar";
-                            break;
-                        //German
-                        case 3:
-                            label.text = "Ausstatten";
-                            break;
-                        //Portagese
-                        case 4:
-                            label.text = "Equipar";
-                            break;
-                    }
+                    label.text = Translation("Equip");
                 }
             }
             else if (item.accessory)
             {
-                switch (lang)
-                {
-                    //English
-                    case 0:
-                        type.text = "Accessory";
-                        break;
-                    //French
-                    case 1:
-                        type.text = "Accessoire";
-                        break;
-                    //Spanish
-                    case 2:
-                        type.text = "Accesorio";
-                        break;
-                    //German
-                    case 3:
-                        type.text = "Zubehor";
-                        break;
-                    //Portagese
-                    case 4:
-                        type.text = "Acessorio";
-                        break;
-                }
+                type.text = Translation("Accessory");
                 
                 if (PlayerPrefs.GetString("Active Player Accessory") == item.itemName)
                 {
-                    switch (lang)
-                    {
-                        //English
-                        case 0:
-                            label.text = "Equipped";
-                            break;
-                        //French
-                        case 1:
-                            label.text = "Equipe";
-                            break;
-                        //Spanish
-                        case 2:
-                            label.text = "Equipado";
-                            break;
-                        //German
-                        case 3:
-                            label.text = "Ausgestattet";
-                            break;
-                        //Portagese
-                        case 4:
-                            label.text = "Equipado";
-                            break;
-                    }
+                    label.text = Translation("Equipped");
 
                 }
                 else
                 {
-                    switch (lang)
-                    {
-                        //English
-                        case 0:
-                            label.text = "Equip";
-                            break;
-                        //French
-                        case 1:
-                            label.text = "Equiper";
-                            break;
-                        //Spanish
-                        case 2:
-                            label.text = "Equipar";
-                            break;
-                        //German
-                        case 3:
-                            label.text = "Ausstatten";
-                            break;
-                        //Portagese
-                        case 4:
-                            label.text = "Equipar";
-                            break;
-                    }
+                    label.text = Translation("Equip");
                 }
             }
         }
     }
-
+    
     private static void SetInventoryItems(List<Item> items, Transform content, InventoryItemController[] controllersList)
     {
         controllersList = content.GetComponentsInChildren<InventoryItemController>();
         
         for (int i = 0; i < items.Count; i++)
         {
-            
             controllersList[i].AddItem(items[i]);
         }
     }
@@ -524,9 +242,171 @@ public class InventoryManager : MonoBehaviour
                 {
                     storeItems.Add(item);
                 }
-                
             }
         }
+    }
+    private string Translation(string word)
+    {
+        string label = "";
+        
+        if (word == "Equipped")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Equipped";
+                    break;
+                //French
+                case 1:
+                    label = "Equipe";
+                    break;
+                //Spanish
+                case 2:
+                    label = "Equipado";
+                    break;
+                //German
+                case 3:
+                    label = "Ausgestattet";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Equipado";
+                    break;
+            }
+        }
+        else if (word == "Equip")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Equip";
+                    break;
+                //French
+                case 1:
+                    label = "Equiper";
+                    break;
+                //Spanish
+                case 2:
+                    label = "Equipar";
+                    break;
+                //German
+                case 3:
+                    label = "Ausstatten";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Equipar";
+                    break;
+            }
+            
+        }
+        else if (word == "Accessory")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Accessory";
+                    break;
+                //French
+                case 1:
+                    label = "Accessoire";
+                    break;
+                //Spanish
+                case 2:
+                    label = "Accesorio";
+                    break;
+                //German
+                case 3:
+                    label = "Zubehor";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Acessorio";
+                    break;
+            }
+        }
+        else if (word == "Skin")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Skin";
+                    break;
+                //French
+                case 1:
+                    label = "Peau";
+                    break;
+                //Spanish
+                case 2:
+                    label = "Piel";
+                    break;
+                //German
+                case 3:
+                    label = "Haut";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Pele";
+                    break;
+            }
+        }
+        else if (word == "Skin Set")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Skin Set";
+                    break;
+                //French
+                case 1:
+                    label = "Set de peau";
+                    break;
+                //Spanish
+                case 2:
+                    label = "Juego de pieles";
+                    break;
+                //German
+                case 3:
+                    label = "Skin-Set";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Conjunto de pele";
+                    break;
+            }
+        }
+        else if (word == "Buy")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Buy";
+                    break;
+                //French
+                case 1:
+                    label = "Acheter";
+                    break;
+                //Spanish
+                case 2:
+                    label = "Comprar";
+                    break;
+                //German
+                case 3:
+                    label = "Kaufen";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Comprar";
+                    break;
+            }
+        }
+        return label;
     }
 }
 
