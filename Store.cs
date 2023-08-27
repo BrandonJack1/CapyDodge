@@ -5,38 +5,29 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-
+//Legacy Store Code. No longer used
 public class Store : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI coinAmt;
 
-    public TextMeshProUGUI coinAmt;
-
-    public TMP_Text topHat;
-    public TMP_Text santaHat;
-    public TMP_Text bow;
-    public TMP_Text crown;
-    public TMP_Text cone;
-    public TMP_Text prison;
+    [SerializeField] private TMP_Text topHat;
+    [SerializeField] private TMP_Text santaHat;
+    [SerializeField] private TMP_Text bow;
+    [SerializeField] private TMP_Text crown;
+    [SerializeField] private TMP_Text cone;
+    [SerializeField] private TMP_Text prison;
     
-    public GameObject premiumBtn;
-    public GameObject equipBtn;
-    public GameObject noAdsImage;
-    public GameObject noAdsBox;
+    [SerializeField] private GameObject premiumBtn;
+    [SerializeField] private GameObject equipBtn;
+    [SerializeField] private GameObject noAdsImage;
+    [SerializeField] private GameObject noAdsBox;
     
 
-    public AudioSource source;
-    public AudioClip clip;
-    public AudioClip doorOpen;
-    public AudioClip bell;
-    public AudioClip invalid;
-
-    public GameObject price1;
-    public GameObject price2;
-    public GameObject price3;
-    public GameObject price4;
-    public GameObject price5;
-
-    public GameObject betaBox;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip clip;
+    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private AudioClip bell;
+    [SerializeField] private AudioClip invalid;
 
 
     public static bool playPurchaseSound = false;
@@ -46,28 +37,13 @@ public class Store : MonoBehaviour
     public string[] twoThousand = {"Crown"};
     public string[] threeThousand = {"Prison"};
     
-    
-   
-     
-    
-    
-
     // Start is called before the first frame update
     void Start()
     {
-        
-        //PlayerPrefs.DeleteAll();
-        //REMOVE
-        //PlayerPrefs.SetInt("Coins", 500);
-        
         source.PlayOneShot(bell);
         source.PlayOneShot(doorOpen);
         
-        
-        
-        
         coinAmt.text = PlayerPrefs.GetInt("Coins", 0).ToString();
-
     }
 
     // Update is called once per frame
@@ -85,99 +61,18 @@ public class Store : MonoBehaviour
             source.PlayOneShot(invalid);
         }
         
-        
         coinAmt.text = PlayerPrefs.GetInt("Coins", 0).ToString();
         
-        /*if (PlayerPrefs.GetString("Beta", "No") == "Yes")
-        {
-            betaBox.SetActive(true);
-        }
-        
-        if (PlayerPrefs.GetString("Player Cone") == "Not Equipped")
-        {
-            cone.text = "Equip";
-        }
-        if(PlayerPrefs.GetString("Active Player Skin") == "Cone")
-        {
-            cone.text = "Equipped";
-            
-        }
-
-        if (PlayerPrefs.GetString("Player TopHat") == "Not Equipped")
-        {
-            topHat.text = "Equip";
-            price1.SetActive(false);
-        }
-        if(PlayerPrefs.GetString("Active Player Skin") == "TopHat")
-        {
-            topHat.text = "Equipped";
-            price1.SetActive(false);
-        }
-        
-        if (PlayerPrefs.GetString("Player Bow") == "Not Equipped")
-        {
-            bow.text = "Equip";
-            price2.SetActive(false);
-            
-        }
-        if(PlayerPrefs.GetString("Active Player Skin") == "Bow")
-        {
-            bow.text = "Equipped";
-            price2.SetActive(false);
-        }
-        
-        if (PlayerPrefs.GetString("Player SantaHat") == "Not Equipped")
-        {
-            santaHat.text = "Equip";
-            price3.SetActive(false);
-        }
-        if(PlayerPrefs.GetString("Active Player Skin") == "SantaHat")
-        {
-            santaHat.text = "Equipped";
-            price3.SetActive(false);
-        }
-
-        if (PlayerPrefs.GetString("Player Crown") == "Not Equipped")
-        {
-            crown.text = "Equip";
-            price4.SetActive(false);
-        }
-        if(PlayerPrefs.GetString("Active Player Skin") == "Crown")
-        {
-            crown.text = "Equipped";
-            price4.SetActive(false);
-        }
-        
-        if (PlayerPrefs.GetString("Player Prison") == "Not Equipped")
-        {
-            prison.text = "Equip";
-            price5.SetActive(false);
-        }
-        if(PlayerPrefs.GetString("Active Player Skin") == "Prison")
-        {
-            prison.text = "Equipped";
-            price5.SetActive(false);
-        }*/
-
-        //PREIMIUM CODE
-
         if (PlayerPrefs.GetString("ShowAds", "Yes") == "No")
         {
-            
             premiumBtn.gameObject.SetActive(false);
             noAdsImage.gameObject.SetActive(false);
             noAdsBox.gameObject.SetActive(false);
-            
         }
-
     }
-
-
-
     
     public void Buy(Button btn)
     {
-        
         //if the item is not already owned
         if (PlayerPrefs.GetString("Player " + btn.name) != "Equipped" && PlayerPrefs.GetString("Player " + btn.name) != "Not Equipped")
         {

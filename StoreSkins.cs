@@ -213,6 +213,4 @@ public class StoreSkins : MonoBehaviour
             headBow.gameObject.SetActive(false);
         }
     }
-
-
 }

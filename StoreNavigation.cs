@@ -8,52 +8,46 @@ using UnityEngine.Localization.Settings;
 
 public class StoreNavigation : MonoBehaviour
 {
+    [SerializeField] private GameObject inventory;
+    [SerializeField] private GameObject skinSets;
+    [SerializeField] private GameObject skins;
+    [SerializeField] private GameObject accessories;
+    [SerializeField] private GameObject store;
 
-    public GameObject inventory;
-
-    public GameObject skinSets;
-    public GameObject skins;
-    public GameObject accessories;
+    [SerializeField] private Button storeBtn;
+    [SerializeField] private Sprite pressed;
+    [SerializeField] private Sprite normal;
     
+    [SerializeField] private GameObject allStoreBought;
+    [SerializeField] private GameObject noSkinSetsOwned;
+    [SerializeField] private GameObject noSkinsOwned;
+    [SerializeField] private GameObject noAccessoriesOwned;
 
-    public GameObject store;
+    [SerializeField] private GameObject coinMenu;
 
-    public Button storeBtn;
-    public Sprite pressed;
-    public Sprite normal;
+    [SerializeField] private TextMeshProUGUI coinAmount;
+
+    [SerializeField] private GameObject arrow1;
+    [SerializeField] private GameObject arrow2;
+    [SerializeField] private GameObject arrow3;
     
-    public GameObject allStoreBought;
-    public GameObject noSkinSetsOwned;
-    public GameObject noSkinsOwned;
-    public GameObject noAccessoriesOwned;
+    [SerializeField] private GameObject noAds;
+    [SerializeField] private GameObject buyCoins;
+    [SerializeField] private GameObject restorePurchases;
 
-    public GameObject coinMenu;
+    private int lang;
 
-    public TextMeshProUGUI coinAmount;
-
-    public GameObject arrow1;
-    public GameObject arrow2;
-    public GameObject arrow3;
-
-
-    public GameObject noAds;
-    public GameObject buyCoins;
-    public GameObject restorePurchases;
-
-    public int lang;
-    
-
-    // public GameObject featured;
-
-    public TextMeshProUGUI navLabel;
+    [SerializeField] private TextMeshProUGUI navLabel;
     // Start is called before the first frame update
     void Start()
     {
+        //set users language
         lang = PlayerPrefs.GetInt("Lang Pref", 0);
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[lang];
         
         storeBtn.GetComponent<Image>().sprite = pressed;
-
+        
+        //hide buttons on TVOS
         if (Application.platform == RuntimePlatform.tvOS)
         {
             noAds.SetActive(false);
@@ -64,16 +58,16 @@ public class StoreNavigation : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-
+    {   
+        //update the players coin amount in the store
         coinAmount.text = PlayerPrefs.GetInt("Coins", 0).ToString();
-        
         
         if (inventory.activeInHierarchy)
         {
             storeBtn.GetComponent<Image>().sprite = normal;
         }
-
+        
+        //Show messages if a player does not have any items for a category
         if (InventoryManager.instance.storeItems.Count == 0)
         {
             allStoreBought.SetActive(true);
@@ -85,7 +79,6 @@ public class StoreNavigation : MonoBehaviour
 
         if (InventoryManager.instance.skinSets.Count == 0)
         {
-            
             noSkinSetsOwned.SetActive(true);
         }
         else
@@ -95,7 +88,6 @@ public class StoreNavigation : MonoBehaviour
         
         if (InventoryManager.instance.skins.Count == 0)
         {
-            
             noSkinsOwned.SetActive(true);
         }
         else
@@ -105,7 +97,6 @@ public class StoreNavigation : MonoBehaviour
         
         if (InventoryManager.instance.accessories.Count == 0)
         {
-            
             noAccessoriesOwned.SetActive(true);
         }
         else
@@ -114,15 +105,12 @@ public class StoreNavigation : MonoBehaviour
         }
         
     }
-
-
+    
     public void ShowInventory()
     {
         inventory.SetActive(true);
         store.SetActive(false);
-        //featured.SetActive(false);
-        
-        
+
         switch (lang)
         {
             //English
@@ -148,13 +136,11 @@ public class StoreNavigation : MonoBehaviour
         }
     }
 
-    public void showStore()
+    public void ShowStore()
     {
         store.SetActive(true);
         inventory.SetActive(false);
-        //featured.SetActive(false);
-        
-        
+
         switch (lang)
         {
             //English
@@ -177,8 +163,6 @@ public class StoreNavigation : MonoBehaviour
             case 4:
                 navLabel.text = "Loja";
                 break;
-            
-            
         }
     }
 
@@ -191,7 +175,6 @@ public class StoreNavigation : MonoBehaviour
         arrow1.SetActive(true);
         arrow2.SetActive(false);
         arrow3.SetActive(false);
-        
     }
     
     public void ShowSkins()
@@ -203,7 +186,6 @@ public class StoreNavigation : MonoBehaviour
         arrow1.SetActive(false);
         arrow2.SetActive(true);
         arrow3.SetActive(false);
-        
     }
     
     public void ShowAccessories()
@@ -215,13 +197,10 @@ public class StoreNavigation : MonoBehaviour
         arrow1.SetActive(false);
         arrow2.SetActive(false);
         arrow3.SetActive(true);
-        
     }
 
     public void ShowFeatured()
     {
-        
-        //featured.SetActive(true);
         inventory.SetActive(false);
         store.SetActive(false);
     }
@@ -229,12 +208,10 @@ public class StoreNavigation : MonoBehaviour
     public void ShowCoins()
     {
         coinMenu.SetActive(true);
-        
     }
 
     public void CloseCoins()
     {
-        
         coinMenu.SetActive(false);
     }
 }
