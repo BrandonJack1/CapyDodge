@@ -9,26 +9,23 @@ using UnityEngine.UI;
 
 public class SettingsPref : MonoBehaviour
 {
+    [SerializeField] private TMP_Text controlsText;
+    [SerializeField] private TMP_Text soundText;
+    [SerializeField] private TMP_Text musicText;
 
-    public TMP_Text controlsText;
-    public TMP_Text soundText;
-    public TMP_Text musicText;
+    [SerializeField] private GameObject helpCanvas;
+    [SerializeField] private GameObject language;
+    [SerializeField] private GameObject soundBtn;
 
-    public GameObject helpCanvas;
-    public GameObject language;
-    public GameObject soundBtn;
-
-    public GameObject controlsBtn;
-    public GameObject controlsLbl;
-
-    public AudioMixer soundMixer;
+    [SerializeField] private GameObject controlsBtn;
+    [SerializeField] private GameObject controlsLbl;
     
-
-    public int lang;
+    private int lang;
+    
     // Start is called before the first frame update
     void Start()
     {
-        
+        //TVOS set default selection
         if ((Application.platform == RuntimePlatform.tvOS) && SceneManager.GetActiveScene().buildIndex == 5)
         {
             var eventSystem = EventSystem.current;
@@ -39,259 +36,207 @@ public class SettingsPref : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         lang = PlayerPrefs.GetInt("Lang Pref", 0);
-
-
+        
         if (Application.platform == RuntimePlatform.tvOS && SceneManager.GetActiveScene().buildIndex == 5)
         {
-
             language.SetActive(false);
-
         }
 
         if (Application.platform == RuntimePlatform.tvOS)
         {
-
+            //hide controls option for TVOS
             controlsBtn.SetActive(false);
             controlsLbl.SetActive(false);
-
-
         }
 
         if (PlayerPrefs.GetString("Controls", "Tilt") == "Touch")
         {
-
-            switch (lang)
-            {
-                //English
-                case 0:
-                    controlsText.text = "Touch";
-                    break;
-                //French
-                case 1:
-                    controlsText.text = "Toucher";
-                    break;
-                //Spansih
-                case 2:
-                    controlsText.text = "Toque";
-                    break;
-                //German
-                case 3:
-                    controlsText.text = "Beruhren Sie";
-                    break;
-                //Portagese
-                case 4:
-                    controlsText.text = "Tacto";
-                    break;
-            }
+            controlsText.text = Translate("Touch");
         }
         else if (PlayerPrefs.GetString("Controls", "Tilt") == "Tilt")
         {
-
-            switch (lang)
-            {
-                //English
-                case 0:
-                    controlsText.text = "Tilt";
-                    break;
-                //French
-                case 1:
-                    controlsText.text = "Inclinaison";
-                    break;
-                //Spansih
-                case 2:
-                    controlsText.text = "Inclinacion";
-                    break;
-                //German
-                case 3:
-                    controlsText.text = "Kippen";
-                    break;
-                //Portagese
-                case 4:
-                    controlsText.text = "Inclinacao";
-                    break;
-            }
-
+            controlsText.text = Translate("Tilt");
         }
 
         if (PlayerPrefs.GetString("Sound", "On") == "On")
         {
-            switch (lang)
-            {
-                //English
-                case 0:
-                    soundText.text = "On";
-                    break;
-                //French
-                case 1:
-                    soundText.text = "Sur";
-                    break;
-                //Spansih
-                case 2:
-                    soundText.text = "En";
-                    break;
-                //German
-                case 3:
-                    soundText.text = "Auf";
-                    break;
-                //Portagese
-                case 4:
-                    soundText.text = "Em";
-                    break;
-            }
+            soundText.text = Translate("On");
         }
         else if (PlayerPrefs.GetString("Sound", "On") == "Off")
         {
-
-            switch (lang)
-            {
-                //English
-                case 0:
-                    soundText.text = "Off";
-                    break;
-                //French
-                case 1:
-                    soundText.text = "Arret";
-                    break;
-                //Spansih
-                case 2:
-                    soundText.text = "Fuera de";
-                    break;
-                //German
-                case 3:
-                    soundText.text = "Aus";
-                    break;
-                //Portagese
-                case 4:
-                    soundText.text = "Desligado";
-                    break;
-            }
+            soundText.text = Translate("Off");
         }
-
-
+        
         if (PlayerPrefs.GetString("Music", "On") == "On")
         {
-            switch (lang)
-            {
-                //English
-                case 0:
-                    musicText.text = "On";
-                    break;
-                //French
-                case 1:
-                    musicText.text = "Sur";
-                    break;
-                //Spansih
-                case 2:
-                    musicText.text = "En";
-                    break;
-                //German
-                case 3:
-                    musicText.text = "Auf";
-                    break;
-                //Portagese
-                case 4:
-                    musicText.text = "Em";
-                    break;
-            }
+            musicText.text = Translate("On");
         }
         else if (PlayerPrefs.GetString("Music", "On") == "Off")
         {
-
-            switch (lang)
-            {
-                //English
-                case 0:
-                    musicText.text = "Off";
-                    break;
-                //French
-                case 1:
-                    musicText.text = "Arret";
-                    break;
-                //Spansih
-                case 2:
-                    musicText.text = "Fuera de";
-                    break;
-                //German
-                case 3:
-                    musicText.text = "Aus";
-                    break;
-                //Portagese
-                case 4:
-                    musicText.text = "Desligado";
-                    break;
-            }
-
-
-
+            musicText.text = Translate("Off");
         }
     }
 
     public void SwitchControls()
     {
-        
         if (PlayerPrefs.GetString("Controls", "Tilt") == "Touch")
         {
-            
             PlayerPrefs.SetString("Controls", "Tilt");
-         
-
         }
         else if (PlayerPrefs.GetString("Controls", "Tilt") == "Tilt")
         {
             PlayerPrefs.SetString("Controls", "Touch");
         }
-        
     }
 
     public void SwitchSound()
     {
         if (PlayerPrefs.GetString("Sound", "On") == "On")
         {
-            
             PlayerPrefs.SetString("Sound", "Off");
-         
-
         }
         else if (PlayerPrefs.GetString("Sound", "On") == "Off")
         {
             PlayerPrefs.SetString("Sound", "On");
         }
-        
     }
 
     public void SwitchMusic()
     {
-        
         if (PlayerPrefs.GetString("Music", "On") == "On")
         {
             PlayerPrefs.SetString("Music", "Off");
-            
         }
         else if (PlayerPrefs.GetString("Music", "On") == "Off")
         {
             PlayerPrefs.SetString("Music", "On");
         }
     }
-
+    
     public void Reset()
     {
-        
         PlayerPrefs.DeleteAll();
     }
 
     public void ShowCanvas()
     {
         helpCanvas.SetActive(true);
-        
     }
 
     public void HideCanvas()
     {
-        
         helpCanvas.SetActive(false);
+    }
+    
+    private string Translate(string word)
+    {
+        string label = "";
+        if (word == "Touch")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Touch";
+                    break;
+                //French
+                case 1:
+                    label = "Toucher";
+                    break;
+                //Spansih
+                case 2:
+                    label = "Toque";
+                    break;
+                //German
+                case 3:
+                    label = "Beruhren Sie";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Tacto";
+                    break;
+            }
+        }
+        else if (word == "Tilt")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Tilt";
+                    break;
+                //French
+                case 1:
+                    label = "Inclinaison";
+                    break;
+                //Spansih
+                case 2:
+                    label = "Inclinacion";
+                    break;
+                //German
+                case 3:
+                    label = "Kippen";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Inclinacao";
+                    break;
+            }
+        }
+        else if (word == "On")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "On";
+                    break;
+                //French
+                case 1:
+                    label = "Sur";
+                    break;
+                //Spansih
+                case 2:
+                    label = "En";
+                    break;
+                //German
+                case 3:
+                    label = "Auf";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Em";
+                    break;
+            }
+        }
+        else if (word == "Off")
+        {
+            switch (lang)
+            {
+                //English
+                case 0:
+                    label = "Off";
+                    break;
+                //French
+                case 1:
+                    label = "Arret";
+                    break;
+                //Spansih
+                case 2:
+                    label = "Fuera de";
+                    break;
+                //German
+                case 3:
+                    label = "Aus";
+                    break;
+                //Portagese
+                case 4:
+                    label = "Desligado";
+                    break;
+            }
+        }
+        return label;
     }
     
 }
