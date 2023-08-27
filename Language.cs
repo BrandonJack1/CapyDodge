@@ -7,16 +7,16 @@ public class Language : MonoBehaviour
 {
     public GameObject pannel;
     private bool active = false;
+    
     public void ChangeLocale(int localeID)
     {
-        if (active == true)
+        if (active)
             return;
         StartCoroutine(SetLocale(localeID));
     }
 
     void Start()
     {
-        
         //if the player hasnt selected a language yet, present it to them (dont show for Apple TV)
         if (PlayerPrefs.GetString("Lang Set", "No") == "No" && Application.platform != RuntimePlatform.tvOS)
         {
