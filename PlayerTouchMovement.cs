@@ -60,6 +60,5 @@ public class PlayerTouchMovement : MonoBehaviour
             return;
         if (horizontalInput != 0.0)
             characterBody.velocity = new Vector2(PLAYER_SPEED * horizontalInput, 0.0f);
-        
     }
 }
