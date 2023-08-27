@@ -2,22 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTimedMovement : MonoBehaviour
+public class PlayerTouchMovement : MonoBehaviour
 {
-   
-    public GameObject character;
+    [SerializeField] private GameObject character;
     private Rigidbody2D characterBody;
     private float ScreenWidth;
     public static bool allowMovement = true;
-    public GameObject timerBar;
-    public static float playerSpeed = 11f;
-    //prev was 8.7 for speed
+    [SerializeField] private GameObject timerBar;
+    private const float PLAYER_SPEED = 11f;
 
     private void Start()
     {
-        this.ScreenWidth = (float) Screen.width;
-        this.characterBody = this.character.GetComponent<Rigidbody2D>();
+        characterBody = character.GetComponent<Rigidbody2D>();
         
+        //reduce player speed for ipad
 #if UNITY_IOS
         
         if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
@@ -30,20 +28,22 @@ public class PlayerTimedMovement : MonoBehaviour
 
     private void Update()
     {
-
+        //if the player is using touch controls
         if (PlayerPrefs.GetString("Controls", "Tilt") == "Touch" && PlayerMovement.playerMove)
         {
             for (int index = 0; index < Input.touchCount; ++index)
             {
-                if ((double)Input.GetTouch(index).position.x > (double)this.ScreenWidth / 2.0)
+                //if the player is touching on the right side of the screen
+                if (Input.GetTouch(index).position.x > Screen.width / 2.0)
                 {
-                    this.RunCharacter(1f);
+                    RunCharacter(1f);
                     character.transform.localScale = new Vector3(-0.2481744f, 0.2857763f, 1);
                     timerBar.transform.localScale = new Vector3(-1, 1, 1);
                 }
-                else if((double)Input.GetTouch(index).position.x < (double)this.ScreenWidth / 2.0)
+                //if the player is touching on the left side of the screen
+                else if(Input.GetTouch(index).position.x < Screen.width / 2.0)
                 {
-                    this.RunCharacter(-1f);
+                    RunCharacter(-1f);
                     character.transform.localScale = new Vector3(0.2481744f, 0.2857763f, 1);
                     timerBar.transform.localScale = new Vector3(1, 1, 1);
                 }
@@ -59,7 +59,7 @@ public class PlayerTimedMovement : MonoBehaviour
         if (!PlayerMovement.allowMovement)
             return;
         if (horizontalInput != 0.0)
-            characterBody.velocity = new Vector2(playerSpeed * horizontalInput, 0.0f);
+            characterBody.velocity = new Vector2(PLAYER_SPEED * horizontalInput, 0.0f);
         
     }
 }

@@ -4,29 +4,25 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public GameObject character;
-    public Rigidbody2D characterBody;
+    [SerializeField] private GameObject character;
+    [SerializeField] private Rigidbody2D characterBody;
+    [SerializeField] private GameObject timerBar;
+    [SerializeField] private Camera mainCamera;
+    
     public static bool allowMovement = true;
-    public GameObject timerBar;
     public static bool playerMove = true;
 
-    public float leftOffset;
-    public float rightOffset;
-
-    public Camera mainCamera;
-
-    public float playerWidth;
-    public float playerHeight;
-
-    public static float playerSpeed = 10.7f;
-
-    public int fpsOffset;
-    public float iPadOffset;
-   
+    private float leftOffset;
+    private float rightOffset;
+    private float playerWidth;
+    private float playerHeight;
+    private const float PLAYER_SPEED = 10.7f;
+    private float iPadOffset;
+    private int fpsOffset;
     
     void Start()
     {
-        
+        //reduce player speeds for iPAD
 #if UNITY_IOS
         
         if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
@@ -49,27 +45,11 @@ public class PlayerMovement : MonoBehaviour
         leftOffset = Camera.main.pixelWidth / 30;
         rightOffset = Camera.main.pixelWidth / 17;
         
-        //Define the size of the character
-        playerWidth = 0.28f;
-        playerHeight = 0.28f;
-        
-/*
-#if UNITY_IOS
-        
-        if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
-        {
-            playerWidth = 0.20385161f;
-            playerHeight = 0.270000011f;
-        }
-#endif*/
-        
-        character.transform.localScale = new Vector3(playerWidth, playerHeight, 1);
-        
+        character.transform.localScale = new Vector3(PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
     }
 
     void Update()
     {
-        
         if (Input.GetKey("d"))
         {
             //move character
@@ -110,14 +90,12 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                
                 if (playerMove)
                 {
                     character.transform.Translate(Input.acceleration.x/ (1.4f + iPadOffset), 0f, 0f);
                     
                     if (Input.acceleration.x < 0f)
                     {
-                        
                         character.transform.localScale = new Vector3(playerWidth, playerHeight, 1);
                         timerBar.transform.localScale = new Vector3(-1, 1, 1);
                     }
@@ -125,7 +103,6 @@ public class PlayerMovement : MonoBehaviour
                     {
                         character.transform.localScale = new Vector3(-playerWidth, playerHeight, 1);
                         timerBar.transform.localScale = new Vector3(1, 1, 1);
-
                     }
                 }
             }
@@ -136,8 +113,7 @@ public class PlayerMovement : MonoBehaviour
         if (!allowMovement)
             return;
         if (horizontalInput != 0.0)
-            characterBody.velocity = new Vector2(playerSpeed * horizontalInput, 0.0f);
+            characterBody.velocity = new Vector2(PLAYER_SPEED * horizontalInput, 0.0f);
     }
-
 }
 
