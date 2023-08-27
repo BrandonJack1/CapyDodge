@@ -6,15 +6,12 @@ using UnityEngine.UI;
 
 public class PromoCode : MonoBehaviour
 {
-    public TMP_InputField input;
-    public string code;
-    public TextMeshProUGUI message;
-
-    public GameObject panel;
-    private void Start()
-    {
-    }
-
+    [SerializeField] private TMP_InputField input;
+    [SerializeField] private TextMeshProUGUI message;
+    [SerializeField] private GameObject panel;
+    
+    private string code;
+    
     public void Enter()
     {
         code = input.text;

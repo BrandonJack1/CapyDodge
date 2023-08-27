@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SeasonalSkin : MonoBehaviour
 {
-
     public Transform grassParent;
     public Transform bushParent;
 
@@ -13,7 +12,6 @@ public class SeasonalSkin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         //Valentines
         if (PlayerPrefs.GetString("Seasonal", "No") == "Yes")
         {
@@ -38,12 +36,6 @@ public class SeasonalSkin : MonoBehaviour
             }
         }
         
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 }
