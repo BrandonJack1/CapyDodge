@@ -9,17 +9,9 @@ public class Modes : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         if (Application.platform != RuntimePlatform.IPhonePlayer)
         {
             leaderBoard.SetActive(false);
         }
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
