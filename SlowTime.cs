@@ -9,30 +9,28 @@ using Random = UnityEngine.Random;
 
 public class SlowTime : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public static int offset;
-    public static int spawnRate;
+    private static int spawnRate;
 
-    public GameObject powerUp;
-    public Camera mainCamera;
-    public float leftOffset;
-    public float rightOffset;
-    public float middleOffset;
+    [SerializeField] private GameObject warningCountdown;
+    [SerializeField] private GameObject powerUp;
+    [SerializeField] private Camera mainCamera;
+    
+    private float leftOffset;
+    private float rightOffset;
     public static Stopwatch timer;
     
-    public GameObject warningCountdown;
     public static bool active = false;
     public static bool inArea = false;
+    
     void Start()
     {
-        //set intial spawnRate
+        //set initial spawnRate
         spawnRate = 10;
         
         //spawn offsets for screens
         leftOffset = Camera.main.pixelWidth / 30;
         rightOffset = Camera.main.pixelWidth / 20;
-        middleOffset = Camera.main.pixelWidth / 10;
 
         //start the spawn timer
         timer = new Stopwatch();
@@ -43,9 +41,6 @@ public class SlowTime : MonoBehaviour
         warningCountdown.gameObject.SetActive(false);
 
         active = false;
-
-
-
     }
 
     // Update is called once per frame
@@ -67,8 +62,6 @@ public class SlowTime : MonoBehaviour
     
     void SpawnPowerUp()
     {
-        
-        
         float powerUpPos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
         
         //Create a new acorn to spawn

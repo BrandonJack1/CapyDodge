@@ -73,7 +73,6 @@ public class Skins : MonoBehaviour
         if (PlayerPrefs.GetString("Active Player Accessory") == "Cone")
         {
             cone.gameObject.SetActive(true);
-            
         }
         else
         {
@@ -162,7 +161,6 @@ public class Skins : MonoBehaviour
         if (PlayerPrefs.GetString("Active Player Accessory") == "Sunglasses")
         {
             sunglasses.gameObject.SetActive(true);
-            
         }
         else
         {
@@ -170,7 +168,6 @@ public class Skins : MonoBehaviour
         }
         if (PlayerPrefs.GetString("Active Player Skin") == "Suit")
         {
-            
             suit.gameObject.SetActive(true);
         }
         else
@@ -199,7 +196,6 @@ public class Skins : MonoBehaviour
         if (PlayerPrefs.GetString("Active Player Accessory") == "Wizard")
         {
             wizard.gameObject.SetActive(true);
-            
         }
         else
         {
@@ -209,17 +205,10 @@ public class Skins : MonoBehaviour
         if (PlayerPrefs.GetString("Active Player Accessory") == "HeadBow")
         {
             headBow.gameObject.SetActive(true);
-            
         }
         else
         {
             headBow.gameObject.SetActive(false);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
