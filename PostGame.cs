@@ -9,39 +9,33 @@ using UnityEngine.Localization.Settings;
 
 public class PostGame : MonoBehaviour
 {
-
+    private int numCoins;
+    private int gameCoins;
+    private int totalCoins;
     
-    public int numCoins;
-    public int gameCoins;
-    public int totalCoins;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI coinsText;
+    [SerializeField] private TextMeshProUGUI thisGameCoins;
+    [SerializeField] private TextMeshProUGUI highScoreText;
     
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI coinsText;
-    public TextMeshProUGUI thisGameCoins;
-    public TextMeshProUGUI highScoreText;
+    [SerializeField] private GameObject thisGameCoinsContainer;
+    [SerializeField] private GameObject retryBtn;
     
-    public GameObject thisGameCoinsContainer;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip coin;
     
-    public AudioSource source;
-    public AudioClip coin;
-    public int lang;
-
-    public GameObject retryBtn;
+    private int lang;
     
     // Start is called before the first frame update
     void Start()
     {
-
+        //set the players langauge prefernece
         lang = PlayerPrefs.GetInt("Lang Pref", 0);
-        
-       
-        
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[lang];
+        
         Time.timeScale = 1f;
         
         //Display the score
-
-
         string scoreLang = "";
 
         switch (lang)
@@ -68,18 +62,16 @@ public class PostGame : MonoBehaviour
                 break;
         }
         
+        scoreText.text = scoreLang + ": " + Score.score;
         
-        scoreText.text = scoreLang + ": " + Score.score.ToString();
-
-
+        //Set default selection for TVOS
         if (Application.platform == RuntimePlatform.tvOS)
         {
             var eventSystem = EventSystem.current;
             eventSystem.SetSelectedGameObject(retryBtn, new BaseEventData(eventSystem));
         }
         
-
-
+        //if its an iOS device report the High Score
        if (Application.platform == RuntimePlatform.IPhonePlayer)
        {
            Social.ReportScore(Score.score, "1", HighScoreCheck);
@@ -117,7 +109,6 @@ public class PostGame : MonoBehaviour
                 break;
         }
         
-        
         //display the high score
         highScoreText.text = highscoreLang + PlayerPrefs.GetInt("High Score", 0).ToString();
 
@@ -136,11 +127,11 @@ public class PostGame : MonoBehaviour
         //St Patricks
         totalCoins = numCoins + gameCoins;
         PlayerPrefs.SetInt("Coins", totalCoins);
-        StartCoroutine(updateTotalCoins());
+        StartCoroutine(UpdateTotalCoins());
 
     }
 
-    IEnumerator updateTotalCoins()
+    IEnumerator UpdateTotalCoins()
     {
         yield return new WaitForSeconds(1.8f);
         source.PlayOneShot(coin);
@@ -155,6 +146,4 @@ public class PostGame : MonoBehaviour
         else
             Debug.Log("score submission failed");
     }
-
-   
 }
