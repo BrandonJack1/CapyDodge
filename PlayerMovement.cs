@@ -16,19 +16,23 @@ public class PlayerMovement : MonoBehaviour
     private float rightOffset;
     private float playerWidth;
     private float playerHeight;
-    private const float PLAYER_SPEED = 10.7f;
+    private float playerSpeed = 10.7f;
     private float iPadOffset;
     private int fpsOffset;
     
     void Start()
     {
-        //reduce player speeds for iPAD
+        //set players size
+        character.transform.localScale = new Vector3(0.28f, 0.28f, 1);
+        
 #if UNITY_IOS
         
+        //if the player is on an iPad, reduce scale and speed
         if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
         {
             playerSpeed = 8.7f;
             iPadOffset = 0.2f;
+            character.transform.localScale = new Vector3(0.2f, 0.25f, 1);
         }
 #endif
         
@@ -42,10 +46,8 @@ public class PlayerMovement : MonoBehaviour
         }
         
         //Get screen offsets to prevent user from leaving the area
-        leftOffset = Camera.main.pixelWidth / 30;
-        rightOffset = Camera.main.pixelWidth / 17;
-        
-        character.transform.localScale = new Vector3(PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
+        leftOffset = Camera.main.pixelWidth/ 30;
+        rightOffset = Camera.main.pixelWidth/ 17;
     }
 
     void Update()
@@ -56,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
             RunCharacter(1f);
             
             //flip character
-            character.transform.localScale = new Vector3(-playerWidth, playerHeight, 1);
+            character.transform.localScale = new Vector3(-PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
             
             //flip power up loading bar
             timerBar.transform.localScale = new Vector3(1, 1, 1);
@@ -68,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
             RunCharacter(-1f);
             
             //flip character
-            character.transform.localScale = new Vector3(playerWidth, playerHeight, 1);
+            character.transform.localScale = new Vector3(PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
             
             //flip power up loading bar
             timerBar.transform.localScale = new Vector3(-1, 1, 1);
@@ -96,12 +98,12 @@ public class PlayerMovement : MonoBehaviour
                     
                     if (Input.acceleration.x < 0f)
                     {
-                        character.transform.localScale = new Vector3(playerWidth, playerHeight, 1);
+                        character.transform.localScale = new Vector3(PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
                         timerBar.transform.localScale = new Vector3(-1, 1, 1);
                     }
                     else if(Input.acceleration.x >0f)
                     {
-                        character.transform.localScale = new Vector3(-playerWidth, playerHeight, 1);
+                        character.transform.localScale = new Vector3(-PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
                         timerBar.transform.localScale = new Vector3(1, 1, 1);
                     }
                 }
@@ -113,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if (!allowMovement)
             return;
         if (horizontalInput != 0.0)
-            characterBody.velocity = new Vector2(PLAYER_SPEED * horizontalInput, 0.0f);
+            characterBody.velocity = new Vector2(playerSpeed * horizontalInput, 0.0f);
     }
 }
 

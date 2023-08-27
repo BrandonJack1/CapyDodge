@@ -6,21 +6,25 @@ public class PlayerTouchMovement : MonoBehaviour
 {
     [SerializeField] private GameObject character;
     private Rigidbody2D characterBody;
-    private float ScreenWidth;
+    private float screenWidth;
     public static bool allowMovement = true;
     [SerializeField] private GameObject timerBar;
-    private const float PLAYER_SPEED = 11f;
+    private float playerSpeed = 11f;
 
     private void Start()
     {
         characterBody = character.GetComponent<Rigidbody2D>();
         
-        //reduce player speed for ipad
+        //set player size
+        character.transform.localScale = new Vector3(0.28f, 0.28f, 1);
+        
 #if UNITY_IOS
         
+        //reduce player scale and speed on iPad
         if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
         {
             playerSpeed = 8.7f;
+            character.transform.localScale = new Vector3(0.2f, 0.25f, 1);
 
         }
 #endif
@@ -37,14 +41,15 @@ public class PlayerTouchMovement : MonoBehaviour
                 if (Input.GetTouch(index).position.x > Screen.width / 2.0)
                 {
                     RunCharacter(1f);
-                    character.transform.localScale = new Vector3(-0.2481744f, 0.2857763f, 1);
+                    //character.transform.localScale = new Vector3(-0.2481744f, 0.2857763f, 1);
+                    character.transform.localScale = new Vector3(-PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
                     timerBar.transform.localScale = new Vector3(-1, 1, 1);
                 }
                 //if the player is touching on the left side of the screen
                 else if(Input.GetTouch(index).position.x < Screen.width / 2.0)
                 {
                     RunCharacter(-1f);
-                    character.transform.localScale = new Vector3(0.2481744f, 0.2857763f, 1);
+                    character.transform.localScale = new Vector3(PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
                     timerBar.transform.localScale = new Vector3(1, 1, 1);
                 }
                 else
@@ -59,6 +64,6 @@ public class PlayerTouchMovement : MonoBehaviour
         if (!PlayerMovement.allowMovement)
             return;
         if (horizontalInput != 0.0)
-            characterBody.velocity = new Vector2(PLAYER_SPEED * horizontalInput, 0.0f);
+            characterBody.velocity = new Vector2(playerSpeed * horizontalInput, 0.0f);
     }
 }
