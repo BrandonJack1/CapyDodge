@@ -15,6 +15,7 @@ public class Acorn : MonoBehaviour
     public static bool goldenActive = false;
     public static bool giantActive = false;
     private static float spawnRate = 4f;
+    private bool iPad = false;
     private float leftOffset;
     private float rightOffset;
 
@@ -54,6 +55,15 @@ public class Acorn : MonoBehaviour
         //particle system for the leaves
         particles = leavesParticle.GetComponent<ParticleSystem>();
         spawnRate = 4f;
+        
+#if UNITY_IOS
+        if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
+        {
+
+            iPad = true;
+        }
+#endif
+        
     }
     
     void Update()
@@ -178,7 +188,7 @@ public class Acorn : MonoBehaviour
                 goldenActive = true;
                 InstantiateAcorns(pos, "Golden");
             }
-            else if (spawnDiffAcorn is 10 or 20 && giantActive == false && !UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
+            else if (spawnDiffAcorn is 10 or 20 && giantActive == false && iPad == false)
             {
                 giantActive = true;
                 InstantiateAcorns(pos, "Giant");
