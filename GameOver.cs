@@ -242,15 +242,7 @@ public class GameOver : MonoBehaviour
                     //spawn a floating number
                     prefab.GetComponentInChildren<TextMesh>().text = points.ToString();
 
-                    if (col.CompareTag("GoldenAcorn"))
-                    {
-                        source.PlayOneShot(goldenAcornCollect);
-                    }
-                    else
-                    {
-                        source.PlayOneShot(acornCollect);
-                    }
-                    
+                    source.PlayOneShot(col.CompareTag("GoldenAcorn") ? goldenAcornCollect : acornCollect);
                 }
                 Destroy(prefab, SECONDS_TO_DESTROY);
             }
