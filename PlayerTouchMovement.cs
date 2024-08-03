@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,11 +22,11 @@ public class PlayerTouchMovement : MonoBehaviour
 #if UNITY_IOS
         
         //reduce player scale and speed on iPad
-        if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
+        var identifier = SystemInfo.deviceModel;
+        if (identifier.StartsWith("iPad", StringComparison.Ordinal))
         {
             playerSpeed = 8.7f;
-            character.transform.localScale = new Vector3(0.2f, 0.25f, 1);
-
+            
         }
 #endif
     }

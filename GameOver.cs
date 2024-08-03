@@ -11,6 +11,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using CandyCoded.HapticFeedback;
+using CloudOnce;
 
 
 public class GameOver : MonoBehaviour
@@ -23,6 +25,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private GameObject previousComboText;
     [SerializeField] private GameObject empty;
     [SerializeField] private GameObject slowRemaining;
+    [SerializeField] private GameObject net;
     
     private const float SECONDS_TO_DESTROY = 0.8f;
     public static bool continueUsed = false;
@@ -53,6 +56,7 @@ public class GameOver : MonoBehaviour
     public static bool soundActive;
     private bool clockSoundActive = false;
     public static bool toggleSound;
+    private int starCounter = 0;
     
     void Start()
     {
@@ -71,6 +75,8 @@ public class GameOver : MonoBehaviour
 
         soundActive = true;
         toggleSound = true;
+
+        BombAcorn.bombAcornCount = 0;
     }
 
     private void Update()
@@ -132,6 +138,16 @@ public class GameOver : MonoBehaviour
             //hide the countdown timer when the power up is done
             slowRemaining.SetActive(false);
         }
+
+        if (starCounter >= 5 && !Achievements.Star.IsUnlocked && Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            Achievements.Star.Unlock();
+        }
+        
+        if (BombAcorn.bombAcornCount >= 3 && !Achievements.Bomb_Acorn.IsUnlocked && Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            Achievements.Bomb_Acorn.Unlock();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -163,10 +179,22 @@ public class GameOver : MonoBehaviour
             {   
                 //get rid of acorn
                 Destroy(col.gameObject);
+
+                Acorn.acornCount--;
+                if (col.gameObject.GetComponent<SpriteRenderer>().sprite.name == "Bomb-Acorn")
+                {
+                    BombAcorn.bombAcornCount++;
+                    print(BombAcorn.bombAcornCount);
+                }
                 
                 //default points for normal acorn is 50
                 float points = 50;
-                
+
+                if (Application.platform == RuntimePlatform.IPhonePlayer && PlayerPrefs.GetString("Vibration", "On") != "Off")
+                {
+                    HapticFeedback.LightFeedback();
+                }
+
                 if (col.CompareTag("GiantAcorn"))
                 {
                     Acorn.giantActive = false;
@@ -177,6 +205,16 @@ public class GameOver : MonoBehaviour
                     Acorn.goldenActive = false;
                     points = 200;
                 }
+
+                if (col.CompareTag("GiantAcorn"))
+                {
+                    net.GetComponent<Animator>().SetTrigger("GiantNetTrigger");
+                }
+                else
+                {
+                    net.GetComponent<Animator>().SetTrigger("NetTrigger");
+                }
+                
                 
                 GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
 
@@ -266,6 +304,8 @@ public class GameOver : MonoBehaviour
             Destroy(prefab, SECONDS_TO_DESTROY);
             
             Apple.starActive = false;
+
+            starCounter++;
         }
         else if (col.CompareTag("Clock"))
         {

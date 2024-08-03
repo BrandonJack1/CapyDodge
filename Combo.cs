@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CloudOnce;
 using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -49,6 +50,8 @@ public class Combo : MonoBehaviour
             //display a bonus message if the player has a high multiplier
             if (multiplier >= 2f)
             {   
+                //Check to see if the user has unlocked the combo achievement
+                comboAchievement();
                 //instantiate message
                 GameObject comboMessage = Instantiate(comboMessagePrefab, new Vector3(-12.48f, -1.07f,-0.1f), quaternion.identity );
                 comboMessage.transform.SetParent(empty.transform, false);
@@ -213,5 +216,14 @@ public class Combo : MonoBehaviour
             break;
         } 
         return message;
+    }
+
+    public void comboAchievement()
+    {
+
+        if (!Achievements.Combo.IsUnlocked && Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            Achievements.Combo.Unlock();
+        }
     }
 }

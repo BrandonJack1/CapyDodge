@@ -19,6 +19,7 @@ public class SettingsPref : MonoBehaviour
 
     [SerializeField] private GameObject controlsBtn;
     [SerializeField] private GameObject controlsLbl;
+
     
     private int lang;
     

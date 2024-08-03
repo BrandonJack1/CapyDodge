@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CloudOnce;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -75,6 +76,17 @@ public class PostGame : MonoBehaviour
        if (Application.platform == RuntimePlatform.IPhonePlayer)
        {
            Social.ReportScore(Score.score, "1", HighScoreCheck);
+            
+           //update achievments
+           if (Score.score >= 5000 && !Achievements.Score1.IsUnlocked)
+           {
+               Achievements.Score1.Unlock();
+           }
+
+           if (Score.score >= 10000 && !Achievements.Score2.IsUnlocked)
+           {
+               Achievements.Score2.Unlock();
+           }
        }
 
        //if the score is better than high score, update it

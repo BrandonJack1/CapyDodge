@@ -21,7 +21,8 @@ public class Apple : MonoBehaviour
     [SerializeField] private AudioSource Source;
     [SerializeField] private AudioClip collectSound;
     [SerializeField] private AudioClip leaves;
-    
+
+    public GameObject appleSpawnSmoke;
     private float leftOffset;
     private float rightOffset;
     private float middleOffset;
@@ -36,7 +37,7 @@ public class Apple : MonoBehaviour
 
     private bool appleCollision = false;
     public static bool starActive = false;
-    private bool spawnRight = false;
+    private bool spawnRight = true;
     
     void Start()
     {
@@ -44,7 +45,12 @@ public class Apple : MonoBehaviour
         float pos = RndPos(false, true);
         
         //spawn an apple
-        GameObject appleClone = Instantiate<GameObject>(apple, new Vector3(pos, -4.2f, 0), Quaternion.identity);
+        //GameObject appleClone = Instantiate<GameObject>(apple, new Vector3(pos, -4.2f, 0), Quaternion.identity);
+
+        apple.transform.position = new Vector3(pos, -4.2f, 0);
+        
+        
+        //apple.transform.localScale = new Vector3(PlayerSize.APPLE_WIDTH, PlayerSize.APPLE_HEIGHT, 5);
         
         //reset apple counter
         appleCount = 0;
@@ -122,11 +128,15 @@ public class Apple : MonoBehaviour
                 //increase the apple count
                 appleCount++;
             }
-            GameObject appleClone = Instantiate(apple, new Vector3(pos, -4.3f, 0), Quaternion.identity);
+            //GameObject appleClone = Instantiate(apple, new Vector3(pos, -4.3f, 0), Quaternion.identity);
+
+            GameObject smokeClone = Instantiate(appleSpawnSmoke, new Vector3(pos, -4.3f, 0), Quaternion.identity);
+            Destroy(smokeClone, 0.4f);
+            apple.transform.position = new Vector3(pos, -4.3f, 0);
             
             //hide and destroy the apple
-            col.gameObject.SetActive(false);
-            Destroy(col.transform.parent.gameObject);
+            //col.gameObject.SetActive(false);
+            //Destroy(col.transform.parent.gameObject);
             
             //instantiate a floating score for when the apple is collected
             GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);
@@ -135,7 +145,7 @@ public class Apple : MonoBehaviour
             Destroy(prefab, secondsToDestroy);
 
             //1 in 25 chance of the star spawning
-            int rnd = Random.Range(0, 25);
+            int rnd = Random.Range(1, 25);
             
             //if the chance happens and there isnt already a star spawned in
             if (rnd == 5 && starActive == false)
@@ -186,7 +196,7 @@ public class Apple : MonoBehaviour
         //if this is the start of the game just spawn the apple anywhere
         if (start)
         {
-            pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(Camera.main.pixelWidth/2, 0)).x);
+            pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(mainCamera.pixelWidth/2 - rightOffset, 0)).x);
         }
         else
         {

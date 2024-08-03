@@ -103,11 +103,12 @@ public class PowerUp : MonoBehaviour
         //get a random position
         float pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
         
+        //1 in 15 chance of spawning the golden net
         //spawn the item
         GameObject net = Object.Instantiate<GameObject>(powerUp, new Vector3(pos, 5.5f, 0), Quaternion.identity);
         
         //if the player doesnt pick up the net for an amount of time, point an arrow to it
-        StartCoroutine(NetPoint(net));
+        //StartCoroutine(NetPoint(net));
     }
 
     static IEnumerator NetPoint(GameObject net)

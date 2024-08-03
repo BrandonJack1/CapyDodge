@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CandyCoded.HapticFeedback;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,6 +24,10 @@ public class GiantAcorn : MonoBehaviour
             leaves.Clear();
             leaves.Play();
             
+            if (Application.platform == RuntimePlatform.IPhonePlayer && PlayerPrefs.GetString("Vibration", "On") != "Off")
+            {
+                HapticFeedback.LightFeedback();
+            }
             //play screen shake animaiton
             animator.SetTrigger("Shake");
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     
     public static bool allowMovement = true;
     public static bool playerMove = true;
+    public static bool moveLeft;
+    public static bool moveRight;
 
     private float leftOffset;
     private float rightOffset;
@@ -22,17 +25,21 @@ public class PlayerMovement : MonoBehaviour
     
     void Start()
     {
+
+        moveRight = false;
+        moveLeft = false;
         //set players size
         character.transform.localScale = new Vector3(0.28f, 0.28f, 1);
         
 #if UNITY_IOS
         
+        var identifier = SystemInfo.deviceModel;
         //if the player is on an iPad, reduce scale and speed
-        if (UnityEngine.iOS.Device.generation.ToString().Contains("iPad"))
+        if (identifier.StartsWith("iPad", StringComparison.Ordinal))
         {
             playerSpeed = 8.7f;
             iPadOffset = 0.2f;
-            character.transform.localScale = new Vector3(0.2f, 0.25f, 1);
+            
         }
 #endif
         
@@ -84,25 +91,27 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerPrefs.GetString("Controls", "Tilt") == "Tilt")
         {
             //if the player moves out of these bounds then stop them
-            if(mainCamera.WorldToScreenPoint(character.transform.position).x < (leftOffset) && Input.acceleration.x<0f)
+            if((mainCamera.WorldToScreenPoint(character.transform.position).x < (leftOffset) && Input.acceleration.x<0f))
             {
             }
-            else if(mainCamera.WorldToScreenPoint(character.transform.position).x > (Screen.width -rightOffset) && Input.acceleration.x>0f)
+            else if((mainCamera.WorldToScreenPoint(character.transform.position).x > (Screen.width -rightOffset) && Input.acceleration.x>0f))
             {
             }
             else
             {
                 if (playerMove)
                 {
-                    character.transform.Translate(Input.acceleration.x/ (1.4f + iPadOffset), 0f, 0f);
                     
-                    if (Input.acceleration.x < 0f)
+                    
+                    if (Input.acceleration.x < 0f  && moveLeft != true)
                     {
+                        character.transform.Translate(Input.acceleration.x/ (1.4f + iPadOffset), 0f, 0f);
                         character.transform.localScale = new Vector3(PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
                         timerBar.transform.localScale = new Vector3(-1, 1, 1);
                     }
-                    else if(Input.acceleration.x >0f)
+                    else if(Input.acceleration.x >0f && moveRight != true)
                     {
+                        character.transform.Translate(Input.acceleration.x/ (1.4f + iPadOffset), 0f, 0f);
                         character.transform.localScale = new Vector3(-PlayerSize.PLAYER_WIDTH, PlayerSize.PLAYER_HEIGHT, 1);
                         timerBar.transform.localScale = new Vector3(1, 1, 1);
                     }
@@ -116,6 +125,31 @@ public class PlayerMovement : MonoBehaviour
             return;
         if (horizontalInput != 0.0)
             characterBody.velocity = new Vector2(playerSpeed * horizontalInput, 0.0f);
+    }
+
+    public void OnTriggerEnter2D(Collider2D col)
+    {
+        
+        if (col.CompareTag("Left") && moveLeft != true)
+        {
+            moveRight = true;
+        }
+        else if (col.CompareTag("Right") && moveRight != true)
+        {
+            moveLeft = true;
+        }
+    }
+    
+    public void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("Left"))
+        {
+            moveRight = false;
+        }
+        else if (col.CompareTag("Right"))
+        {
+            moveLeft = false;
+        }
     }
 }
 

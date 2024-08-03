@@ -25,12 +25,27 @@ public class StoreSkins : MonoBehaviour
     public GameObject chef;
     public GameObject wizard;
     public GameObject headBow;
+    public GameObject ghost;
+    public GameObject pumpkin;
+    public GameObject candyCane;
+    public GameObject santa;
+    public GameObject golden;
+    public GameObject birthdayHat;
+    public GameObject clown;
 
     public GameObject construction;
     // Start is called before the first frame update
     void Update()
     {
 
+        if (PlayerPrefs.GetString("Active Player Skin") == "Golden Capy")
+        {
+            golden.SetActive(true);
+        }
+        else
+        {
+            golden.SetActive(false);
+        }
         if (PlayerPrefs.GetString("Active Player Accessory") == "TopHat")
         {
             topHat.gameObject.SetActive(true);
@@ -211,6 +226,61 @@ public class StoreSkins : MonoBehaviour
         else
         {
             headBow.gameObject.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin Set") == "Pumpkin")
+        {
+            pumpkin.gameObject.SetActive(true);
+        }
+        else
+        {
+            pumpkin.gameObject.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin") == "Ghost")
+        {
+            ghost.gameObject.SetActive(true);
+        }
+        else
+        {
+            ghost.gameObject.SetActive(false);
+        }
+        
+          
+        if (PlayerPrefs.GetString("Active Player Skin") == "CandyCane")
+        {
+            candyCane.gameObject.SetActive(true);
+        }
+        else
+        {
+            candyCane.gameObject.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin Set") == "Santa")
+        {
+            santa.gameObject.SetActive(true);
+        }
+        else
+        {
+            santa.gameObject.SetActive(false);
+        }
+
+        if (PlayerPrefs.GetString("Active Player Accessory") == "BirthdayHat")
+        {
+            birthdayHat.SetActive(true);
+        }
+        else
+        {
+            birthdayHat.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin") == "Clown")
+        {
+            clown.SetActive(true);
+        }
+        else
+        {
+            clown.SetActive(false);
         }
     }
 }

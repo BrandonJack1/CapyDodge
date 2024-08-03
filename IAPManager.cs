@@ -56,7 +56,12 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         BuyProductID(LARGE_COINS);
     }
-    
+
+    public void OnInitializeFailed(InitializationFailureReason error, string message)
+    {
+        throw new NotImplementedException();
+    }
+
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
         if (String.Equals(args.purchasedProduct.definition.id, REMOVE_ADS, StringComparison.Ordinal))

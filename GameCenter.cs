@@ -22,6 +22,7 @@ public class GameCenter : MonoBehaviour
             Debug.Log ("Authentication successful");
             Social.CreateLeaderboard();
             Social.CreateLeaderboard().id = "1";
+            
         }
         else
         {

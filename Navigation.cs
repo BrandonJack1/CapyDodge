@@ -47,6 +47,11 @@ public class Navigation : MonoBehaviour
         Social.ShowLeaderboardUI();
     }
 
+    public void ShowAchievements()
+    {
+        Social.ShowAchievementsUI();
+    }
+
     public void Modes()
     {
        ChangeScene(6);
