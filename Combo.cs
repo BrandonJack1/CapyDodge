@@ -110,7 +110,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Portagese
                 case 4:
-                    message = "Incrivel";
+                    message = "Incrível";
                     break;
             }
             break;
@@ -127,7 +127,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Spansih
                 case 2:
-                    message = "Bellota-Tastica";
+                    message = "Bellota-tástica";
                     break;
                 //German
                 case 3:
@@ -135,7 +135,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Portagese
                 case 4:
-                    message = "Bolota-Tastica";
+                    message = "Bolota-tástica";
                     break;
             }
             break;
@@ -152,7 +152,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Spansih
                 case 2:
-                    message="Increible";
+                    message="Increíble";
                     break;
                 //German
                 case 3:
@@ -160,7 +160,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Portagese
                 case 4:
-                    message="Inacreditavel";
+                    message="Inacreditável";
                     break;
             }
             break;
@@ -173,7 +173,7 @@ public class Combo : MonoBehaviour
                     break;
                 //French
                 case 1:
-                    message="Genial";
+                    message="Génial";
                     break;
                 //Spansih
                 case 2:
@@ -185,7 +185,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Portagese
                 case 4:
-                    message="Incrivel";
+                    message="Incrível";
                     break;
             }
             break;
@@ -202,7 +202,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Spansih
                 case 2:
-                    message = "Bellota-Tastica";
+                    message = "Bellota-tástica";
                     break;
                 //German
                 case 3:
@@ -210,7 +210,7 @@ public class Combo : MonoBehaviour
                     break;
                 //Portagese
                 case 4:
-                    message = "Bolota-Tastica";
+                    message = "Bolota-tástica";
                     break;
             }
             break;

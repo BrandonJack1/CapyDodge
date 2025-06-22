@@ -161,6 +161,7 @@ public class Continue : MonoBehaviour
             
             //set there is a power up present
             PowerUp.powerUpPresent = true;
+            Apple.goldenActive = false;
             PowerUp.active = true;
             Time.timeScale = 1f;
             continueScreen.gameObject.SetActive(false);

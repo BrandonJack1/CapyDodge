@@ -8,6 +8,7 @@ using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Serialization;
+using Debug = System.Diagnostics.Debug;
 
 
 public class Apple : MonoBehaviour
@@ -30,6 +31,11 @@ public class Apple : MonoBehaviour
     
     public static int appleCount = 0;
     private int lang;
+    public static bool goldenAppleSpawned;
+
+    public Sprite appleSprite;
+    public Sprite goldenSprite;
+    public static bool goldenActive;
 
     [FormerlySerializedAs("appleCnt")] [SerializeField] private TextMeshProUGUI appleCountText;
     
@@ -41,6 +47,7 @@ public class Apple : MonoBehaviour
     
     void Start()
     {
+        
         //Get a random position to spawn
         float pos = RndPos(false, true);
         
@@ -48,7 +55,9 @@ public class Apple : MonoBehaviour
         //GameObject appleClone = Instantiate<GameObject>(apple, new Vector3(pos, -4.2f, 0), Quaternion.identity);
 
         apple.transform.position = new Vector3(pos, -4.2f, 0);
-        
+
+        goldenAppleSpawned = false;
+        goldenActive = false;
         
         //apple.transform.localScale = new Vector3(PlayerSize.APPLE_WIDTH, PlayerSize.APPLE_HEIGHT, 5);
         
@@ -107,11 +116,14 @@ public class Apple : MonoBehaviour
             appleCountBox.gameObject.SetActive(true);
         }
         
+     
+        
         appleCollision = false;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
+        UnityEngine.Debug.Log("Here" + appleCollision);
         if (col.CompareTag("Apple") && appleCollision == false)
         {
             appleCollision = true;
@@ -128,15 +140,29 @@ public class Apple : MonoBehaviour
                 //increase the apple count
                 appleCount++;
             }
-            //GameObject appleClone = Instantiate(apple, new Vector3(pos, -4.3f, 0), Quaternion.identity);
 
+            
             GameObject smokeClone = Instantiate(appleSpawnSmoke, new Vector3(pos, -4.3f, 0), Quaternion.identity);
             Destroy(smokeClone, 0.4f);
             apple.transform.position = new Vector3(pos, -4.3f, 0);
             
-            //hide and destroy the apple
-            //col.gameObject.SetActive(false);
-            //Destroy(col.transform.parent.gameObject);
+            //Golden net
+            if (appleCount == 9 && goldenAppleSpawned == false && Acorn.acornCount >= 2)
+            {
+                int spawnGoldenApple = Random.Range(0, 2);
+                
+                if (spawnGoldenApple == 1)
+                {
+                    goldenAppleSpawned = true;
+                    apple.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = goldenSprite;
+                    goldenActive = true;
+                }
+            }
+            else
+            {
+                apple.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = appleSprite;
+            }
+            
             
             //instantiate a floating score for when the apple is collected
             GameObject prefab = Instantiate(floatingScore, transform.position, Quaternion.identity);

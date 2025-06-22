@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -12,6 +13,7 @@ public class PowerUp : MonoBehaviour
 {
     [SerializeField] private GameObject powerUp;
     [SerializeField] private GameObject propNet;
+    public GameObject goldPropNet;
     [SerializeField] private GameObject bg;
     [SerializeField] private GameObject bar;
     
@@ -30,6 +32,20 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private AudioClip netSpawn;
     
     [SerializeField] private Camera mainCamera;
+
+    public Sprite normalNet;
+    public Sprite goldenNet;
+    public GameObject goldenLight;
+    public GameObject smoke;
+    public Sprite coin;
+    public GameObject coinPannel;
+
+    public static bool goldRushActive;
+
+    public AudioSource mainMusic;
+    public AudioSource goldenMusic;
+
+    public Sprite acornSprite;
     
     // Start is called before the first frame update
     void Start()
@@ -40,6 +56,7 @@ public class PowerUp : MonoBehaviour
         //reset the statuses
         powerUpPresent = false;
         active = false;
+        goldRushActive = false;
     }
 
     // Update is called once per frame
@@ -82,8 +99,21 @@ public class PowerUp : MonoBehaviour
                 //reset the statuses
                 active = false;
                 powerUpPresent = false;
-                
-                propNet.SetActive(false);
+
+                if (goldRushActive)
+                {
+                    goldPropNet.SetActive(false);
+                    goldRushActive = false;
+                    coinPannel.SetActive(false);
+                    goldenLight.SetActive(false);
+                    StartCoroutine(UndoGoldenNetAnimation());
+
+                }
+                else
+                {
+                    propNet.SetActive(false);
+                }
+               
                 timeRemaining = 10;
                 
                 //hide the loading bar
@@ -102,13 +132,26 @@ public class PowerUp : MonoBehaviour
         
         //get a random position
         float pos = Random.Range(mainCamera.ScreenToWorldPoint(new Vector2(0 + leftOffset, 0)).x, mainCamera.ScreenToWorldPoint(new Vector2(Screen.width - rightOffset, 0)).x);
+
         
-        //1 in 15 chance of spawning the golden net
-        //spawn the item
-        GameObject net = Object.Instantiate<GameObject>(powerUp, new Vector3(pos, 5.5f, 0), Quaternion.identity);
-        
-        //if the player doesnt pick up the net for an amount of time, point an arrow to it
-        //StartCoroutine(NetPoint(net));
+        GameObject net = Instantiate(powerUp, new Vector3(pos, 5.5f, 0), Quaternion.identity);
+        if (!Apple.goldenActive)
+        {
+            //if the golden apple is not active then spawn the normal net
+            net.GetComponent<SpriteRenderer>().sprite = normalNet;
+
+        }
+        else
+        {
+            coinPannel.SetActive(true);
+            //spawn the light
+            GameObject goldenLightClone = Instantiate(goldenLight, new Vector3(pos, 5.5f, 0), Quaternion.identity);
+            goldenLightClone.transform.GetChild(0).GetComponent<Animator>().SetTrigger("LightShine");
+            //play the animation
+            net.GetComponent<SpriteRenderer>().sprite = goldenNet;
+            //spawn the golden net
+            Apple.goldenActive = false;
+        }
     }
 
     static IEnumerator NetPoint(GameObject net)
@@ -134,16 +177,113 @@ public class PowerUp : MonoBehaviour
             Destroy(col.gameObject);
             active = true;
             
+           
+            
+            if (col.GetComponent<SpriteRenderer>().sprite.name == "GoldNet")
+            {
+                
+                goldRushActive = true;
+                GameObject shine = GameObject.Find("LightParent(Clone)").transform.GetChild(0).gameObject;
+                //GameObject shine = transform.Find("LightParent/Light").gameObject;
+                shine.GetComponent<Animator>().SetTrigger("ShineEnd");
+                StartCoroutine(GoldenNetAnimation());
+                goldPropNet.SetActive(true);
+                goldenMusic.Play();
+                mainMusic.Pause();
+                return;
+            }
+
             //activate the prop net
             propNet.SetActive(true);
+
+            //wait until co routine returns
+        
+            
             //start timer
             timerIsRunning = true;
             bg.SetActive(true);
             
             //scale bar back to 1
             bar.transform.localScale = new Vector3(1, 1, 1);
+
+         
             AnimateBar();
         }
+    }
+
+    IEnumerator GoldenNetAnimation()
+    {
+        GameObject[] acorns = GameObject.FindGameObjectsWithTag("Acorn");
+        GameObject[] giantAcorns = GameObject.FindGameObjectsWithTag("GiantAcorn");
+        GameObject[] goldenAcorns = GameObject.FindGameObjectsWithTag("GoldenAcorn");
+
+        var allAcorns = acorns.Concat(giantAcorns).Concat(goldenAcorns).ToArray();
+        
+        //Go over each acorn and freeze them all
+        foreach (GameObject acorn in allAcorns)
+        {
+            acorn.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            if (acorn.GetComponent<SpriteRenderer>().sprite.name == "Bomb-Acorn")
+            {
+                acorn.transform.GetChild(0).gameObject.SetActive(false);
+                
+            }
+            
+        }
+        
+        foreach (GameObject acorn in allAcorns)
+        {
+            GameObject smokeClone = Instantiate(smoke, acorn.transform.position, Quaternion.identity);
+            acorn.GetComponent<SpriteRenderer>().sprite = coin;
+            Destroy(smokeClone, 0.4f);
+            yield return new WaitForSeconds(0.2f);
+            
+        }
+        
+        foreach (GameObject acorn in allAcorns)
+        {
+            acorn.tag = "Coin";
+            acorn.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+            float x = Random.Range(1f, 3f);
+            float y = Random.Range(3f, 6f);
+            acorn.GetComponent<Rigidbody2D>().AddForce(new Vector2(x,y),ForceMode2D.Impulse);
+            
+            
+        }
+        //start timer
+        timerIsRunning = true;
+        bg.SetActive(true);
+            
+        //scale bar back to 1
+        bar.transform.localScale = new Vector3(1, 1, 1);
+
+         
+        AnimateBar();
+    }
+
+    IEnumerator UndoGoldenNetAnimation()
+    {
+        GameObject[] acorns = GameObject.FindGameObjectsWithTag("Coin");
+        //Go over each acorn and freeze them all
+        foreach (GameObject acorn in acorns)
+        {
+            acorn.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+
+        }
+        
+        foreach (GameObject acorn in acorns)
+        {
+            GameObject smokeClone = Instantiate(smoke, acorn.transform.position, Quaternion.identity);
+            Destroy(acorn);
+            Destroy(smokeClone, 0.4f);
+            Acorn.acornCount--;
+            acorn.tag = "Acorn";
+            yield return new WaitForSeconds(0f);
+
+        }
+        
+        goldenMusic.Pause();
+        mainMusic.Play();
     }
 
     private void AnimateBar()

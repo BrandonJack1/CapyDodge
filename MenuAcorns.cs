@@ -51,7 +51,7 @@ public class MenuAcorns : MonoBehaviour
         var rb = acornClone.GetComponent<Rigidbody2D>();
         acornClone.transform.localScale = new Vector3(1, 1, 1);
         acornClone.transform.eulerAngles = new Vector3(0,0, Random.Range(1, 365));
-        acornClone.GetComponent<SpriteRenderer>().sortingOrder = -1;
+        acornClone.GetComponent<SpriteRenderer>().sortingOrder = 1;
         
         
         //add bounce to the acorn

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using CloudOnce;
+using Random = UnityEngine.Random;
 
 
 public class Acorn : MonoBehaviour
@@ -39,22 +41,32 @@ public class Acorn : MonoBehaviour
     private bool speed8 = false;
     private bool speed9 = false; 
     private bool speed10 = false;
+
+    public static int currentSpeed;
     
     [SerializeField] private AudioSource source;
     [SerializeField] private AudioClip leaves;
     [SerializeField] private AudioClip speedingUp;
     [SerializeField] private AudioClip bombExplosion;
+    [SerializeField] private AudioClip clearBonus;
 
     private ParticleSystem particles;
     [SerializeField] Camera mainCamera;
     public static bool slowActive;
 
     public static int acornCount;
+    public Sprite coin;
 
+    public GameObject clearBonusMessage;
+    public bool zeroAcorns;
+    public bool clearBonusActive = false;
+
+    
     void Start()
     {
 
         acornCount = 0;
+        zeroAcorns = false;
         //starting spawn rate for acorns
         spawnRate = 4f;
         
@@ -83,49 +95,45 @@ public class Acorn : MonoBehaviour
     
     void Update()
     {
-        //adjust the spawn speed
-        if (Score.score >= 750 && speed1 == false)
+       
+        int[] thresholds = { 750, 1500, 2250, 3000, 5000, 7000, 9000, 11000, 13000, 15000 };
+        bool[] speeds = { speed1, speed2, speed3, speed4, speed5, speed6, speed7, speed8, speed9, speed10 };
+        float[] spawnRates = { 4.2f, 3.8f, 3.5f, 3.2f, 2.8f, 2.3f, 1.9f, 1.7f, 1.5f, 1.2f };
+
+        for (int i = thresholds.Length - 1; i >= 0; i--)
         {
-            increaseSpeed(1,4.2f);
+            if (Score.score >= thresholds[i] && !speeds[i])
+            {
+                increaseSpeed(i + 1, spawnRates[i]);
+                break; // Only apply the highest unlocked level
+            }
         }
-        else if (Score.score >= 1500 && speed2 == false)
+
+        if (acornCount == 0 && zeroAcorns)
         {
-            increaseSpeed(2,3.8f);
-        }
-        else if (Score.score >= 2250 && speed3 == false)
-        {
-            increaseSpeed(3,3.5f);
-        }
-        else if (Score.score >= 3000 && speed4 == false)
-        {
-            increaseSpeed(4, 3.2f);
-        }
-        else if (Score.score >= 5000 && speed5 == false)
-        {
-            increaseSpeed(5, 2.8f);
-        }
-        else if (Score.score >= 7000 && speed6 == false)
-        {
-            increaseSpeed(6, 2.3f);
-        }
-        else if (Score.score >= 9000 && speed7 == false)
-        {
-            increaseSpeed(7, 1.9f);
-        }
-        else if (Score.score >= 11000 && speed8 == false)
-        {
-            increaseSpeed(8, 1.7f);
-        }
-        else if (Score.score >= 13000 && speed9 == false)
-        {
-            increaseSpeed(9, 1.5f);
-        }
-        else if (Score.score >= 15000 && speed10 == false)
-        {
-            increaseSpeed(10, 1.2f);
+            print("here");
+            zeroAcorns = false;
+            
+            //Inactive due to animation issues
+            StartCoroutine(ClearBonus());
         }
         
+        
     }
+
+    IEnumerator ClearBonus()
+    {
+        clearBonusActive = true;
+        clearBonusMessage.SetActive(true);
+        clearBonusMessage.GetComponent<Animator>().SetTrigger("ClearBonusMessage");
+        source.PlayOneShot(clearBonus);
+        yield return new WaitForSeconds(2.8f);
+        clearBonusMessage.SetActive(false);
+        clearBonusActive = false;
+        Score.score += 200;
+
+    }
+    
     
     public void increaseSpeed(int speed, float rate)
     {
@@ -135,6 +143,8 @@ public class Acorn : MonoBehaviour
         //play the sound 
         source.PlayOneShot(speedingUp);
         StartCoroutine(DisableText());
+        currentSpeed = speed;
+        
         
         switch (speed)
         {
@@ -177,13 +187,18 @@ public class Acorn : MonoBehaviour
         InvokeRepeating("spawnAcorn", 1, spawnRate);
     }
     public void spawnAcorn()
-    { 
+    {
         acornCount++;
+        if (!clearBonusActive)
+        {
+            zeroAcorns = true;
+        }
+        
         
         if (acornCount >= 20 && !Achievements.Active_Acorns.IsUnlocked && Application.platform == RuntimePlatform.IPhonePlayer)
         {
             Achievements.Active_Acorns.Unlock();
-            print("Acheivment");
+            
         }
         
         //only spawn acorns when the slow time isnt active
@@ -228,8 +243,13 @@ public class Acorn : MonoBehaviour
     
     public void InstantiateAcorns(float pos, string type)
     {
-        GameObject acornType;
         
+        GameObject acornType;
+
+        if (PowerUp.goldRushActive)
+        {
+            type = "Acorn";
+        }
         switch (type)
         {
             case "Golden":
@@ -245,7 +265,7 @@ public class Acorn : MonoBehaviour
                 acornType = acorn;
                 break;
         }
-        var acornClone = Object.Instantiate<GameObject>(acornType, new Vector3(pos, 5.5f, 0), Quaternion.identity);
+        var acornClone = Instantiate<GameObject>(acornType, new Vector3(pos, 5.5f, 0), Quaternion.identity);
         var rb = acornClone.GetComponent<Rigidbody2D>();
 
         //set the proper size for the acorn
@@ -261,7 +281,13 @@ public class Acorn : MonoBehaviour
             StartCoroutine(startBombAcorn(acornClone));
         }
 
-            //add bounce to the acorn
+        if (PowerUp.goldRushActive)
+        {
+            acornClone.GetComponent<SpriteRenderer>().sprite = coin;
+            acornClone.tag = "Coin";
+        }
+
+        //add bounce to the acorn
         rb.AddTorque(-0.3f, ForceMode2D.Force);
         
         //create random forces for the acorns when spawning in 
@@ -297,31 +323,36 @@ public class Acorn : MonoBehaviour
 
         yield return new WaitUntil(() => bombAcorn.explodeArea || bombAcorn.IsDestroyed());
 
-        if (bombAcorn.IsDestroyed())
+        if (!PowerUp.goldRushActive)
         {
-            yield break;
-        }
-        source.PlayOneShot(bombExplosion);
-        animator.SetTrigger("Shake");
-        GameObject smokeClone = Instantiate(bombSmoke, bombAcorn.transform.position, Quaternion.identity);
-        Destroy(smokeClone, 0.4f);
-        List<float> arr = new List<float>();
-
-        for (int i = 0; i < 3; i++)
-        {
-            arr = randomForce();
-
-            if (i % 2 == 0)
+            if (bombAcorn.IsDestroyed())
             {
-                spawnMiniAcorns(acorn, -(arr[0]), arr[1]);
+                yield break;
             }
-            else
-            {
-                spawnMiniAcorns(acorn, arr[0], arr[1]);
-            }
-        }
 
-        acorn.SetActive(false);
+            source.PlayOneShot(bombExplosion);
+            animator.SetTrigger("Shake");
+            GameObject smokeClone = Instantiate(bombSmoke, bombAcorn.transform.position, Quaternion.identity);
+            Destroy(smokeClone, 0.4f);
+            List<float> arr = new List<float>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                arr = randomForce();
+                acornCount++;
+
+                if (i % 2 == 0)
+                {
+                    SpawnMiniAcorns(acorn, -(arr[0]), arr[1]);
+                }
+                else
+                {
+                    SpawnMiniAcorns(acorn, arr[0], arr[1]);
+                }
+            }
+
+            acorn.SetActive(false);
+        }
     }
 
     public List<float> randomForce()
@@ -337,11 +368,12 @@ public class Acorn : MonoBehaviour
 
     }
 
-    private void spawnMiniAcorns(GameObject bombAcorn,float x, float y)
+    private void SpawnMiniAcorns(GameObject bombAcorn,float x, float y)
     {
-
+        
         Vector3 bombAcornPos = bombAcorn.transform.position;
         GameObject miniAcornClone = Instantiate(miniAcorn, bombAcornPos, Quaternion.identity);
-        miniAcornClone.GetComponent<Rigidbody2D>().AddForce(new Vector2(x,y),ForceMode2D.Impulse);
+        miniAcornClone.GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y), ForceMode2D.Impulse);
+        
     }
 }

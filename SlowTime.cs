@@ -46,10 +46,10 @@ public class SlowTime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TimeSpan ts = timer.Elapsed;
+        //TimeSpan ts = timer.Elapsed;
 
         //once the timer reaches 10 + the offset
-        if (ts.Seconds >= spawnRate + offset)
+        //if (ts.Seconds >= spawnRate + offset)
         {
             //stop and reset the timer
             timer.Stop();

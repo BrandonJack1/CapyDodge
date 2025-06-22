@@ -41,7 +41,7 @@ public class BackgroundPicker : MonoBehaviour
             }
             else
             {
-                background.GetComponent<SpriteRenderer>().sprite = bg2;
+                background.GetComponent<SpriteRenderer>().sprite = bg1;
             }
         }
         ScaleToFitScreen.refresh = true;

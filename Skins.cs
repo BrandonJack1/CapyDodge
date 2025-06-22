@@ -42,6 +42,8 @@ public class Skins : MonoBehaviour
     public GameObject birthdayHat;
 
     public GameObject clown;
+
+    public GameObject candyCorn;
     // Start is called before the first frame update
     void Start()
     {
@@ -291,6 +293,15 @@ public class Skins : MonoBehaviour
         else
         {
             clown.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin") == "CandyCorn")
+        {
+            candyCorn.SetActive(true);
+        }
+        else
+        {
+            candyCane.SetActive(false);
         }
         
     }

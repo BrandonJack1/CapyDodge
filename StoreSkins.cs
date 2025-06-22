@@ -32,6 +32,7 @@ public class StoreSkins : MonoBehaviour
     public GameObject golden;
     public GameObject birthdayHat;
     public GameObject clown;
+    public GameObject candyCorn;
 
     public GameObject construction;
     // Start is called before the first frame update
@@ -281,6 +282,15 @@ public class StoreSkins : MonoBehaviour
         else
         {
             clown.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetString("Active Player Skin") == "CandyCorn")
+        {
+            candyCorn.SetActive(true);
+        }
+        else
+        {
+            candyCorn.SetActive(false);
         }
     }
 }

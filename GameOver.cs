@@ -26,6 +26,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private GameObject empty;
     [SerializeField] private GameObject slowRemaining;
     [SerializeField] private GameObject net;
+    [SerializeField] private GameObject goldNet;
     
     private const float SECONDS_TO_DESTROY = 0.8f;
     public static bool continueUsed = false;
@@ -58,6 +59,9 @@ public class GameOver : MonoBehaviour
     public static bool toggleSound;
     private int starCounter = 0;
     
+    public TextMeshProUGUI numCoins;
+    
+    public GameObject floatingCoin;
     void Start()
     {
         //used to offer the player a chance to continue
@@ -82,6 +86,8 @@ public class GameOver : MonoBehaviour
     private void Update()
     {
         TimeSpan ts = timer.Elapsed;
+        
+        numCoins.text = PlayerPrefs.GetInt("Coins", 0).ToString();
         
         //Resume background music if the player continues 
         if (soundActive && toggleSound)
@@ -339,6 +345,20 @@ public class GameOver : MonoBehaviour
             SlowTime.offset += 15;
             timer.Start();
         }
+        else if (col.CompareTag("Coin"))
+        {
+
+            int coinAmt = Random.Range(1, 4);
+            Coins.AddCoins(coinAmt);
+            GameObject prefab = Instantiate(floatingCoin, transform.position, Quaternion.identity);
+            prefab.GetComponentInChildren<TextMesh>().text = coinAmt.ToString();
+            //destroy the floating score
+            Destroy(prefab, SECONDS_TO_DESTROY);
+            Destroy(col.gameObject);
+            goldNet.GetComponent<Animator>().SetTrigger("NetTrigger");
+            source.PlayOneShot(coins);
+          
+        }
     }
 
     private IEnumerator GameOverAnimation(bool offerContinue, GameObject col)
@@ -360,6 +380,13 @@ public class GameOver : MonoBehaviour
         
         //hide acorn
         col.SetActive(false);
+        Acorn.acornCount--;
+        
+        //golden apple reset
+        PowerUp.goldRushActive = false;
+        Apple.goldenActive = false;
+        Apple.goldenAppleSpawned = false;
+        
         
         //if the user is eligble for a continue
         if (offerContinue)
